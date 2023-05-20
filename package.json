@@ -10,7 +10,10 @@
   },
   "dependencies": {
     "@expo/ngrok": "^4.1.1",
+    "base-64": "^1.0.0",
     "expo": "^48.0.16",
+    "expo-asset": "~8.9.1",
+    "expo-av": "^13.2.1",
     "expo-file-system": "~15.2.2",
     "expo-status-bar": "~1.4.4",
     "fs": "^0.0.1-security",
