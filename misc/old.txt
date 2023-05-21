@@ -199,3 +199,63 @@ async function createBlob(base64) {
         onChangeText={(e) => setPromptInput(e)}
         value = {promptInput}
       />
+
+// newBlurState = (getBlurState(blurStates, key) == 100) ? 0 : 100;
+                // console.log("new state: " + newBlurState)
+                // console.log(blurStates)
+                // newStates = {
+                // 	...blurStates,
+                // 	[key]: newBlurState
+                // }
+
+                // // blurStates.map((v, i) => {
+                // // 	if (i == key) {
+                // // 		return newBlurState;
+                // // 	} else {
+                // // 		return v;
+                // // 	}
+                // // });
+                // console.log("changed state: " + newStates[key])
+                // console.log(newStates)
+                // setBlurStates(newStates)
+
+function createAIBlock(text, key) {
+		setBlurStates({
+			...blurStates,
+			[key]: 0
+		})
+
+		return (
+		<TouchableOpacity key={key} onPress={() => {
+			
+			newBlurState = (getBlurState(blurStates, key) == 100) ? 0 : 100;
+			console.log("new state: " + newBlurState)
+			console.log(blurStates)
+			newStates = {
+				...blurStates,
+				[key]: newBlurState
+			}
+
+			// blurStates.map((v, i) => {
+			// 	if (i == key) {
+			// 		return newBlurState;
+			// 	} else {
+			// 		return v;
+			// 	}
+			// });
+			console.log("changed state: " + newStates[key])
+			console.log(newStates)
+			setBlurStates(newStates)
+		}}>
+
+			<BlurView intensity={getBlurState(blurStates, key)} style={[styles.conversationBlock, styles.aiResponse]}>
+				<Text style={styles.label}>Gabriela P. Toro:</Text>
+				<Text style={styles.result}>{text}</Text>
+			</BlurView>
+		</TouchableOpacity>
+		)
+	}
+
+	function getBlurState(blurList, key) {
+		return blurList[key]
+	}

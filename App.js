@@ -1,17 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState, useRef } from "react";
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Image, ScrollView, Dimensions, SafeAreaView, Pressable } from 'react-native';
 import { generateConvoResponse, generateMessageCorrection } from './api/gpt';
 import transcribeAudio from './api/whisper';
 import { TEST_VAR } from "@env";
 import "react-native-url-polyfill/auto"
 import { Audio } from "expo-av";
 import * as Speech from 'expo-speech';
-
-
+import Modal from "react-native-modal";
+import { AiBlock } from './components/blocks';
+import { blockStyles } from './components/blockStyles';
 
 export default function App() {
-
+	const hideAIResponse = true;
 	const [recording, setRecording] = useState();
 	const [latestUri, setLatestUri] = useState();
 
@@ -20,24 +21,28 @@ export default function App() {
 	// const [conversationBlocks, setBlocks] = useState([]);
 	const [conversationBlocks, setBlocks] = useState([])
 	const blockList = useRef([])
+	const [modalVisible, setModalVisible] = useState(false);
+	const [messageCorrection, setMessageCorrection] = useState("")
 	const [messageHistory, setMessageHistory] = useState({
 		system:
 		{
-			role: "system",
+			role: "user",
 			content: "Vas a hablar SOLO en español con el user y continuar la conversación. Responde en 15 palabras o menos"
 		},
 		chatHistory: [],
 		latest: {},
 	})
 
-	useEffect(() => {
-		console.log("changed")
-		console.log(blockList.current)
-		setBlocks(blockList.current)
-		console.log("after")
-	}, [blockList.current])
+	// useEffect(() => {
+	// 	console.log("changed")
+	// 	console.log(blockList.current)
+	// 	setBlocks(blockList.current)
+	// 	console.log("after")
+	// }, [blockList.current])
 
 	const scrollViewRef = useRef();
+	const correctionList = useRef({})
+	
 
   async function getGPTResponse(promptInput) {
 
@@ -117,10 +122,10 @@ export default function App() {
 		Speech.speak(text);
 	}
 
+	
+
 	async function onSendRecording(event) {
 		event.preventDefault()
-		console.log("getting audio")
-		console.log(blockList.current)
 		setSendingStatus(true);
 		if (recording) {
 			uri = await stopRecording()
@@ -138,15 +143,31 @@ export default function App() {
 		response = await getGPTResponse(audioTranscript)
 		aiBlock = createAIBlock(response, aiBlockId)
 		blockList.current = [...blockList.current, aiBlock]
-
-		correctedUserBlock = await getCorrectedUserBlock(audioTranscript, userBlockId)
-		blockList.current[userBlockId] = correctedUserBlock
+		setBlocks(blockList.current)
 
 		await speakResponse(response);
 		// setLatestUri(undefined) // remove previous recording
 		setRecordingState("none")
 		setSendingStatus(false)
+
+		correction = await generateMessageCorrection(audioTranscript)
+		correctedUserBlock = await getCorrectedUserBlock(audioTranscript, correction.isCorrect, userBlockId)
+		blockList.current = blockList.current.map((v, i) => {
+			if (i == userBlockId) {
+				return correctedUserBlock;
+			} else {
+				return v;
+			}
+		});
+
+		setBlocks(blockList.current)
+		console.log("correction")
+		console.log(correction.correction)
+		correctionList.current[userBlockId] = correction.correction
+
+
 	}
+	
 
 	async function onRecordPressed(event) {
 		if (recording == undefined) {
@@ -156,9 +177,8 @@ export default function App() {
 		}
 	}
 
-	async function getCorrectedUserBlock(transcript, id) {
-		correction = await generateMessageCorrection(transcript)
-		if (correction.isCorrect) {
+	async function getCorrectedUserBlock(transcript, isCorrect, id) {
+		if (isCorrect) {
 			correctedUserBlock = createUserBlock(transcript, id, "correct") 
 		} else {
 			correctedUserBlock = createUserBlock(transcript, id, "incorrect")
@@ -166,11 +186,79 @@ export default function App() {
 		return correctedUserBlock
 	}
 
+
+	
+
+	function createUserBlock(text, key, correctness = "unknown") {
+		switch (correctness) {
+			case "correct":
+				color = "green"
+				break;
+			case "incorrect":
+				color = "red"
+				break;
+			default:
+				color = "black"
+				break;
+		}
+		if (correctness == "incorrect") {
+			return (
+				<TouchableOpacity 
+					key={key} 
+					onPress={() => onUserBlockPressed(key, correctness)}
+					style={[blockStyles.conversationBlock, styles.userInput, {borderColor: color}]}>
+					<Text style={blockStyles.conversationAuthor}>You:</Text>
+					<Text style={blockStyles.conversationText}>{text}</Text>
+				</TouchableOpacity>
+			)
+		} else {
+			return (
+				<View 
+					key={key} 
+					style={[blockStyles.conversationBlock, styles.userInput, {borderColor: color}]}>
+					<Text style={blockStyles.conversationAuthor}>You:</Text>
+					<Text style={blockStyles.conversationText}>{text}</Text>
+				</View>
+			)
+		}
+		
+	}
+
+	function createAIBlock(text, id) {
+		console.log("id: " + id)
+		return (
+			<AiBlock text={text} key={id} hideResponse={hideAIResponse}/>
+		)
+	}
+	
+
+	const onUserBlockPressed = (key, correctness) => {
+		console.log("Block pressed")
+		if (correctness == "incorrect") {
+			setMessageCorrection(correctionList.current[key])
+			setModalVisible(true)
+		}
+	}
+
   return (
-    <View style={styles.container}>
+	
+    <SafeAreaView style={styles.container}>
+
+		<Modal visible={modalVisible} style={styles.modal}>
+				<View style={styles.correctionPopup}>
+					<Text style={styles.correctionTitle}>Corrección de mensaje</Text>
+					<Text style={styles.correctionBody}>{messageCorrection}</Text>
+					<Pressable style={styles.modalButton} onPress={() => setModalVisible(false)}>
+						<Text>Close</Text>
+					</Pressable>
+				</View>
+		</Modal>
+		
 		<View style={styles.titleContainer}>
 			<Text style={styles.title}>Paja</Text>
 		</View>
+
+
 
 		<View style={styles.convoWrapper}>
 			<ScrollView
@@ -192,39 +280,13 @@ export default function App() {
 				<Image source={require('./assets/arrow.png')}  style={styles.img} />
 			</TouchableOpacity>
 		</View>
-    <StatusBar style="auto" />
-    </View>
+		
+
+    	<StatusBar style="auto" />
+    </SafeAreaView>
   );
 }
 
-function createUserBlock(text, key, correctness = "unknown") {
-	switch (correctness) {
-		case "correct":
-			color = "green"
-			break;
-		case "incorrect":
-			color = "red"
-			break;
-		default:
-			color = "black"
-			break;
-	}
-	return (
-		<View key={key} style={[styles.conversationBlock, styles.userInput, {borderColor: color}]}>
-			<Text style={styles.label}>You:</Text>
-			<Text style={styles.result}>{text}</Text>
-		</View>
-	)
-}
-
-function createAIBlock(text, key) {
-	return (
-	<View key={key} style={[styles.conversationBlock, styles.aiResponse]}>
-		<Text style={styles.label}>Gabriela P. Toro:</Text>
-		<Text style={styles.result}>{text}</Text>
-	</View>
-	)
-}
 
 buttonHeight = 80
 imagePad = 30
@@ -232,59 +294,95 @@ buttonSeparation = 0
 
 const styles = StyleSheet.create({
 
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-	flexDirection:"column",
-  },
+  	container: {
+		flex: 1,
+		backgroundColor: '#fff',
+		alignItems: 'center',
+		justifyContent: 'center',
+		flexDirection:"column",
+		margin:0,
+		padding:0,
+  	},
 
-  titleContainer: {
-	width:"100%",
-	height:100,
-	marginTop:30,
-	alignItems: 'center',
-    justifyContent: 'center',
-	// borderBottomWidth: 10,
-	// borderColor:"black",
-  },
+	modal: {
+		backgroundColor: "rgba(0,0,0,0.3)",
+		alignItems: 'center',
+		justifyContent: 'center',
+		flex:1,
+		margin:0,
+	},
 
-  title: {
-	fontSize:50,
-  },
+  	correctionPopup: {
+		backgroundColor: "white",
+		minHeight: 200,
+		width: 375,
+		alignItems: 'center',
+		justifyContent: "space-evenly",
+		flexDirection:"column",
+		borderRadius:25,
+		borderColor: "black",
+		borderWidth:5,
+		paddingHorizontal: 20,
+		// flex:1,
+	},
 
-  convoWrapper: {
-	width:"100%",
-	height:"65%",
-	borderBottomWidth: 10,
-	borderTopWidth: 10,
-	borderColor:"black",
-  },
-
-  conversationContainer: {
-	width:"100%",
-	paddingHorizontal:10,
-	paddingBottom:40,
-	paddingTop:10,
-	// marginBottom:10,
-	// paddingVertical:20,
-	// borderWidth:10,
-	// borderColor:"red",
-	overflow: "hidden",
-  },
-
-  conversationBlock: {
-	borderColor: "black",
-	borderWidth: 3,
-	marginBottom:10,
-	minHeight: 100,
-	flexDirection:"column",
-    justifyContent: "space-evenly",
-	borderRadius:25,
-	padding:10
+	correctionTitle: {
+		fontSize:20,
+		marginVertical:20,
+		// bottom:"10%"
+	},
 	
-  },
+	correctionBody: {
+		minHeight:50,
+		alignItems: 'center',
+		justifyContent: "center",
+	},
+
+	modalButton: {
+		backgroundColor:"#03adfc",
+		borderRadius: 25,
+		height:50,
+		width:100,
+		alignItems: 'center',
+		justifyContent: "center",
+		marginVertical:20,
+	},
+
+
+  	titleContainer: {
+		width:"100%",
+		height:100,
+		marginTop:30,
+		alignItems: 'center',
+		justifyContent: 'center',
+		// borderBottomWidth: 10,
+		// borderColor:"black",
+  	},
+
+	title: {
+		fontSize:50,
+	},
+
+  	convoWrapper: {
+		width:"100%",
+		height:"65%",
+		borderBottomWidth: 10,
+		borderTopWidth: 10,
+		borderColor:"black",
+  	},
+
+	conversationContainer: {
+		width:"100%",
+		paddingHorizontal:10,
+		paddingBottom:40,
+		paddingTop:10,
+		// marginBottom:10,
+		// paddingVertical:20,
+		// borderWidth:10,
+		// borderColor:"red",
+		overflow: "hidden",
+	},
+
 
   paddingView: {
 	height:10,
@@ -294,18 +392,10 @@ const styles = StyleSheet.create({
 	backgroundColor: "#4f95db"
   },
 
-  aiResponse: {
-	backgroundColor: "#d2d3d4"
-  },
 
-  label: {
 
-  },
+ 
 
-  result: {
-	color:"black",
-	fontSize:20
-  },
 
 
   bottomBar: {
@@ -342,14 +432,15 @@ const styles = StyleSheet.create({
   },
 
 
-  micButton: recordingState => (
+	micButton: recordingState => (
 	{
-	backgroundColor: getMicColor(recordingState)
-  }),
+		backgroundColor: getMicColor(recordingState)
+	}),
 
-  sendButton: isSending => ({
-	backgroundColor: isSending ? "#90EE90" : undefined
-  }),
+	sendButton: isSending => ({
+		backgroundColor: isSending ? "#90EE90" : undefined
+	}),
+
 
 });
 
