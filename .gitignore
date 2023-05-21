@@ -19,3 +19,5 @@ web-build/
 #env files
 
 .env
+.notandroid
+.notios
