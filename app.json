@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "ISP",
-    "slug": "ISP",
+    "slug": "isp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b8059397-4484-4aff-90fe-206f6fb83f78"
+      }
+    },
+    "owner": "kenjinki"
   }
 }
