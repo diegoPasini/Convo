@@ -65,7 +65,7 @@ export default function App() {
   }
 
   async function startRecording() {
-	Speech.stop()
+	//Speech.stop()
     try {
       setRecordingState("recording")
       console.log('Requesting permissions..');
