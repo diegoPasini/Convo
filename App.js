@@ -6,10 +6,10 @@ import transcribeAudio from './api/whisper';
 import { TEST_VAR } from "@env";
 import "react-native-url-polyfill/auto"
 import { Audio } from "expo-av";
-import speech from './api/TextToSpeech.js';
 import Modal from "react-native-modal";
 import { AiBlock } from './components/blocks';
 import { blockStyles } from './components/blockStyles';
+import { textToSpeech } from './api/TextToSpeech';
 
 export default function App() {
 	const hideAIResponse = true;
@@ -119,7 +119,7 @@ export default function App() {
   }
 
   	async function speakResponse(text) {
-		speech(text);
+		textToSpeech(text);
 	}
 
 	
@@ -133,6 +133,7 @@ export default function App() {
 		} else {
 			audioTranscript = await getAudioTranscript();
 		}
+		console.log("out of audio")
 		// setTranscript(audioTranscript)
 		userBlockId = blockList.current.length
 		aiBlockId = userBlockId + 1

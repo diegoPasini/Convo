@@ -2,14 +2,12 @@ import { Platform } from 'react-native';
 import { Audio } from 'expo-av';
 //import * as React from 'react';
 import * as FileSystem from 'expo-file-system';
-import {KEY_IOS, KEY_ANDROID} from "@env"
+import { TTS_KEY } from "@env"
 
-
-
-
-export const speech  = async (text) => {
+export const textToSpeech = async (text) => {
   console.log("Started")
-  const key = Platform.os == 'ios' ? KEY_IOS : KEY_ANDROID
+  // const key = Platform.OS == 'ios' ? KEY_IOS : KEY_ANDROID
+  const key = TTS_KEY
   //bearer = 'Bearer ' + KEY_ANDROID
   const address = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${key}`
   const payload = createRequest(text)
@@ -22,7 +20,7 @@ export const speech  = async (text) => {
     console.log("Fetched API")
     const result = await response.json()
     console.log(result)
-    await recreateAndPlay(path,result.audioContent)
+    await recreateAndPlay(path, result.audioContent)
     console.log("Done")
 
   } catch (err){
