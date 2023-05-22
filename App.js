@@ -6,7 +6,7 @@ import transcribeAudio from './api/whisper';
 import { TEST_VAR } from "@env";
 import "react-native-url-polyfill/auto"
 import { Audio } from "expo-av";
-import speech from './TextToSpeech.js';
+import speech from './api/TextToSpeech.js';
 import Modal from "react-native-modal";
 import { AiBlock } from './components/blocks';
 import { blockStyles } from './components/blockStyles';
@@ -65,7 +65,7 @@ export default function App() {
   }
 
   async function startRecording() {
-	Speech.stop()
+	// Speech.stop()
     try {
       setRecordingState("recording")
       console.log('Requesting permissions..');

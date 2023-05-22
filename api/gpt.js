@@ -106,6 +106,8 @@ export const generateMessageCorrection = async (message) => {
 			max_tokens: 1000,
 			temperature: 0.5,
 		});
+		console.log("full response")
+		console.log(completion)
 		result = completion.data.choices[0].text
 		result = result.trim()
 		console.log("CORRECTION")
