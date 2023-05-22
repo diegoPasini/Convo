@@ -6,7 +6,7 @@ import transcribeAudio from './api/whisper';
 import { TEST_VAR } from "@env";
 import "react-native-url-polyfill/auto"
 import { Audio } from "expo-av";
-import * as Speech from 'expo-speech';
+import speech from './TextToSpeech.js';
 import Modal from "react-native-modal";
 import { AiBlock } from './components/blocks';
 import { blockStyles } from './components/blockStyles';
@@ -119,7 +119,7 @@ export default function App() {
   }
 
   	async function speakResponse(text) {
-		Speech.speak(text);
+		speech(text);
 	}
 
 	
