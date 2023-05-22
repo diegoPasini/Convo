@@ -1,6 +1,7 @@
 import { Configuration, OpenAIApi } from "openai";
 import { OPENAI_API_KEY } from "@env";
 
+const trailingMessage = " (Respond in less than 30 words)"
 
 const configuration = new Configuration({
   apiKey: OPENAI_API_KEY,
@@ -60,7 +61,7 @@ export const generateConvoResponse = async (req) =>  {
 }
 
 function updateMessageHistory(messages, prompt) {
-	newMessage = {"role": "user", "content": prompt}
+	newMessage = {"role": "user", "content": prompt + trailingMessage}
 	if (messages.chatHistory.length == 0) {
 		newHistory = [newMessage]
 	} else {
@@ -83,35 +84,63 @@ export const generateMessageCorrection = async (message) => {
 		console.log("Valid correction message")
 	}
 
-	const prompt = `Responde con 1 si el siguiente mensaje tiene gramática y ortografía totalmente correctas y tiene sentido.
-	Si tiene alguno error, responde con 0 y en la siguiente linea, explica por qué.
-	Mensaje: ${message}`
+	const prompt = `Responde con 1 si el siguiente mensaje tiene gramática totalmente correctas y tiene sentido.
+	Si tiene alguno error, responde con 0 y explica por qué con una lista con viñetas.
+	Example:
+	User: [Mensaje]
+	Tu:
+	0
+	Listo de errores:
+	- "frase incorrecta" -> "frase corregida"
+	- "frase incorrecta" -> "frase corregida"
+
+	User: 
+	${message}
+
+	Tu:`
 
 	try {
 		const completion = await openai.createCompletion({
 			model: "text-davinci-003",
 			prompt: prompt,
 			max_tokens: 1000,
-			temperature: 1,
+			temperature: 0.5,
 		});
 		result = completion.data.choices[0].text
 		result = result.trim()
 		console.log("CORRECTION")
 		console.log(result)
-		console.log("Char at 0 " + result.charAt(0))
-		is_correct = result.charAt(0) == "1" ? true : false;
+
+		reNum = /[01]/g
+		matchNum = reNum.exec(result)
+		console.log(matchNum)
+		console.log("Char at matchNum " + result.charAt(matchNum.index))
+		is_correct = result.charAt(matchNum.index) == "1" ? true : false;
 		if (!is_correct) {
-			re = /[A-Z]/g
-			match = re.exec(result);
-			console.log(match)
-			correction = result.substr(match.index)
+			explanation = result.substr(matchNum.index)
+			reCaps = /[A-Z]/
+			reNL = /\n/
+			matchCaps = reCaps.exec(explanation);
+			matchNewLine = reNL.exec(explanation);
+			if (matchCaps && matchNewLine) {
+				index = Math.min(matchCaps.index, matchNewLine.index)
+			} else {
+				match = matchCaps || matchNewLine
+				if (match)
+					index = match.index
+				else
+					index = 0
+			}
+				
+			console.log(index)
+			correction = explanation.substr(index).trim()
 		} else {
 			correction = ""
 		}
 		console.log(is_correct)
 		console.log(correction)
 
-		return {"isCorrect": is_correct, "corrections": correction}
+		return {"isCorrect": is_correct, "correction": correction}
 
 	} catch (error) {
 		// Consider adjusting the error handling logic for your use case
