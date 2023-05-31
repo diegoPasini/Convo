@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Image, ScrollView, Dimensions, SafeAreaView, Pressable } from 'react-native';
-import { BlurView } from 'expo-blur';
 import PropTypes from 'prop-types';
 import { blockStyles } from './blockStyles';
 

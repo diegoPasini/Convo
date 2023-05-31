@@ -2,8 +2,8 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState, useRef } from "react";
 import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Image, ScrollView, Dimensions, SafeAreaView, Pressable } from 'react-native';
 import { generateConvoResponse, generateMessageCorrection } from './api/gpt';
-import transcribeAudio from './api/whisper';
-import { TEST_VAR } from "@env";
+// import transcribeAudio from './api/whisper';
+import transcribeAudio from './api/deepgram';
 import "react-native-url-polyfill/auto"
 import { Audio } from "expo-av";
 import Modal from "react-native-modal";
@@ -12,7 +12,7 @@ import { blockStyles } from './components/blockStyles';
 import { textToSpeech } from './api/TextToSpeech';
 
 export default function App() {
-	const hideAIResponse = true;
+	const hideAIResponse = false;
 	const [recording, setRecording] = useState();
 	const [latestUri, setLatestUri] = useState();
 
@@ -26,8 +26,8 @@ export default function App() {
 	const [messageHistory, setMessageHistory] = useState({
 		system:
 		{
-			role: "user",
-			content: "Vas a hablar SOLO en español con el user y continuar la conversación. Responde en 15 palabras o menos"
+			role: "system",
+			content: "Vas a hablar SOLO en español como un amigo"
 		},
 		chatHistory: [],
 		latest: {},
@@ -46,13 +46,17 @@ export default function App() {
 
   async function getGPTResponse(promptInput) {
 
+	if (promptInput == undefined) {
+		throw new Error("Missing prompt input")
+	}
+
     try {
 	
 		const response = await generateConvoResponse({prompt: promptInput, messages: messageHistory})
 
 		const data = await response;
 		if (response == undefined) {
-		throw new Error(`Request failed`);
+			throw new Error(`Request failed`);
 		}
 		setMessageHistory(response)
 		return (data.latest).trim() //remove whitespace
@@ -103,19 +107,13 @@ export default function App() {
     console.log("Audio submitted")
     
     uri = inputUri ? inputUri : latestUri
-    try {
-      const response = await transcribeAudio({uri: uri})
-      const data = await response;
-      if (response == undefined) {
-        throw new Error("Audio request failed")
-      }
+	const response = await transcribeAudio({uri: uri})
+	const data = await response;
+//   if (response.status != 200) {
+//     throw new Error("Audio request failed")
+//   }
 	
-	  return data.text
-    } catch(error) {
-      // Consider implementing your own error handling logic here
-      console.error(error);
-      alert(error.message);
-    }
+	return data
   }
 
   	async function speakResponse(text) {
@@ -125,46 +123,53 @@ export default function App() {
 	
 
 	async function onSendRecording(event) {
-		event.preventDefault()
-		setSendingStatus(true);
-		if (recording) {
-			uri = await stopRecording()
-			audioTranscript = await getAudioTranscript(uri);
-		} else {
-			audioTranscript = await getAudioTranscript();
-		}
-		console.log("out of audio")
-		// setTranscript(audioTranscript)
-		userBlockId = blockList.current.length
-		aiBlockId = userBlockId + 1
-		userBlock = createUserBlock(audioTranscript, userBlockId)
-		blockList.current = [...blockList.current, userBlock]
-		setBlocks(blockList.current)
 
-		response = await getGPTResponse(audioTranscript)
-		aiBlock = createAIBlock(response, aiBlockId)
-		blockList.current = [...blockList.current, aiBlock]
-		setBlocks(blockList.current)
-
-		await speakResponse(response);
-		// setLatestUri(undefined) // remove previous recording
-		setRecordingState("none")
-		setSendingStatus(false)
-
-		correction = await generateMessageCorrection(audioTranscript)
-		correctedUserBlock = await getCorrectedUserBlock(audioTranscript, correction.isCorrect, userBlockId)
-		blockList.current = blockList.current.map((v, i) => {
-			if (i == userBlockId) {
-				return correctedUserBlock;
+		try {
+			event.preventDefault()
+			setSendingStatus(true);
+			if (recording) {
+				uri = await stopRecording()
+				audioTranscript = await getAudioTranscript(uri);
 			} else {
-				return v;
+				audioTranscript = await getAudioTranscript();
 			}
-		});
+			console.log("out of audio")
+			// setTranscript(audioTranscript)
+			userBlockId = blockList.current.length
+			aiBlockId = userBlockId + 1
+			userBlock = createUserBlock(audioTranscript, userBlockId)
+			blockList.current = [...blockList.current, userBlock]
+			setBlocks(blockList.current)
 
-		setBlocks(blockList.current)
-		console.log("correction")
-		console.log(correction.correction)
-		correctionList.current[userBlockId] = correction.correction
+			response = await getGPTResponse(audioTranscript)
+			aiBlock = createAIBlock(response, aiBlockId)
+			blockList.current = [...blockList.current, aiBlock]
+			setBlocks(blockList.current)
+
+			await speakResponse(response);
+			// setLatestUri(undefined) // remove previous recording
+			setRecordingState("none")
+			setSendingStatus(false)
+
+			correction = await generateMessageCorrection(audioTranscript)
+			correctedUserBlock = await getCorrectedUserBlock(audioTranscript, correction.isCorrect, userBlockId)
+			blockList.current = blockList.current.map((v, i) => {
+				if (i == userBlockId) {
+					return correctedUserBlock;
+				} else {
+					return v;
+				}
+			});
+
+			setBlocks(blockList.current)
+			console.log("correction")
+			console.log(correction.correction)
+			correctionList.current[userBlockId] = correction.correction
+		} catch (error) {
+			console.error(error);
+      		alert(error.message);
+		}
+		
 
 
 	}
@@ -179,6 +184,11 @@ export default function App() {
 	}
 
 	async function getCorrectedUserBlock(transcript, isCorrect, id) {
+		if (transcript == undefined) {
+			throw new Error("Missing audio transcript")
+		} else if (id == undefined) {
+			throw new Error("Missing corrected user block key")
+		}
 		if (isCorrect) {
 			correctedUserBlock = createUserBlock(transcript, id, "correct") 
 		} else {
@@ -191,6 +201,12 @@ export default function App() {
 	
 
 	function createUserBlock(text, key, correctness = "unknown") {
+		if (text == undefined) {
+			throw new Error("Missing audio transcript")
+		} else if (key == undefined) {
+			throw new Error("Missing user block key")
+		}
+
 		switch (correctness) {
 			case "correct":
 				color = "green"
@@ -226,6 +242,11 @@ export default function App() {
 	}
 
 	function createAIBlock(text, id) {
+		if (text == undefined) {
+			throw new Error("Missing AI response text")
+		} else if (id == undefined) {
+			throw new Error("Missing AI block key")
+		}
 		console.log("id: " + id)
 		return (
 			<AiBlock text={text} key={id} hideResponse={hideAIResponse}/>
@@ -256,7 +277,7 @@ export default function App() {
 		</Modal>
 		
 		<View style={styles.titleContainer}>
-			<Text style={styles.title}>Paja</Text>
+			<Text style={styles.title}>Convo</Text>
 		</View>
 
 

@@ -19,7 +19,7 @@ export const textToSpeech = async (text) => {
     const response = await fetch(`${address}`, payload)
     console.log("Fetched API")
     const result = await response.json()
-    console.log(result)
+    // console.log(result)
     await recreateAndPlay(path, result.audioContent)
     console.log("Done")
 
