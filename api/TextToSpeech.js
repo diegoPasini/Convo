@@ -6,8 +6,9 @@ import { TTS_KEY } from "@env"
 
 export const textToSpeech = async (text) => {
   console.log("Started")
-  // const key = Platform.OS == 'ios' ? KEY_IOS : KEY_ANDROID
+  //const key = Platform.OS == 'ios' ? KEY_IOS : KEY_ANDROID
   const key = TTS_KEY
+  console.log("Key " +  key)
   //bearer = 'Bearer ' + KEY_ANDROID
   const address = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${key}`
   const payload = createRequest(text)
