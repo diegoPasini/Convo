@@ -13,7 +13,7 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-export const transcribeAudio = async (req) =>  {
+export const transcribeAudio = async (req, prompts) =>  {
 	res = {
 		status: {
 			code: 0,
@@ -35,7 +35,7 @@ export const transcribeAudio = async (req) =>  {
 	}
 	
 	try {
-		response = await whisperFetch(uri)
+		response = await whisperFetch(uri, prompts)
 		// console.log(response)
 		resJson = await response.json()
 		console.log(resJson)
@@ -52,7 +52,7 @@ export const transcribeAudio = async (req) =>  {
 }
 
 
-async function whisperFetch(uri) {
+async function whisperFetch(uri, prompts) {
 	var url = "https://api.openai.com/v1/audio/transcriptions";
 	var bearer = 'Bearer ' + OPENAI_API_KEY
 	const formData = new FormData()
@@ -64,7 +64,7 @@ async function whisperFetch(uri) {
 	});
 
 	formData.append("model", "whisper-1");
-	formData.append("language", "es")
+	formData.append("language", prompts.whisperLanguage)
 
 	result = await fetch(url, {
 		method: 'POST',

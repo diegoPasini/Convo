@@ -3,6 +3,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ConvoPage from './ConvoPage';
 import SettingsPage from './SettingsPage'
+import './global.js'
 
 const Stack = createNativeStackNavigator();
 

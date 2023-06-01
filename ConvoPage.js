@@ -11,6 +11,7 @@ import { AiBlock } from './components/blocks';
 import { blockStyles } from './components/blockStyles';
 import { textToSpeech } from './api/TextToSpeech';
 import { ConvoPageStyleSheet } from './ConvoPageStyleSheet.js'
+import './prompts/generalizedPrompts.json'
  
 export default function ConvoPage({navigation}) {
     const hideAIResponse = true;
@@ -24,11 +25,26 @@ export default function ConvoPage({navigation}) {
     const blockList = useRef([])
     const [modalVisible, setModalVisible] = useState(false);
     const [messageCorrection, setMessageCorrection] = useState("")
+    const prompts = require('./prompts/generalizedPrompts.json');
+    //console.log(data.);
+    //const promptsLanguage ={};\
+
+    switch(global.language){
+        case 'Spanish':
+            promptsLanguage = prompts.Spanish
+        case 'French':
+            promptsLanguage = prompts.French
+        case 'English':
+            promptsLanguage = prompts.English
+    }      
+    
+    console.log(promptsLanguage)
+    //console.log(promptsLanguage['ttsName'])
     const [messageHistory, setMessageHistory] = useState({
         system:
         {
             role: "user",
-            content: "Vas a hablar SOLO en español con el user y continuar la conversación. Responde en 15 palabras o menos"
+            content: promptsLanguage.systemInstruction
         },
         chatHistory: [],
         latest: {},
@@ -99,7 +115,7 @@ export default function ConvoPage({navigation}) {
 
     uri = inputUri ? inputUri : latestUri
     try {
-        const response = await transcribeAudio({uri: uri})
+        const response = await transcribeAudio({uri: uri}, promptsLanguage)
         const data = await response;
         if (response == undefined) {
         throw new Error("Audio request failed")
@@ -114,7 +130,7 @@ export default function ConvoPage({navigation}) {
     }
 
     async function speakResponse(text) {
-        textToSpeech(text);
+        textToSpeech(text, promptsLanguage);
     }
 
 
@@ -146,7 +162,7 @@ export default function ConvoPage({navigation}) {
         setRecordingState("none")
         setSendingStatus(false)
 
-        correction = await generateMessageCorrection(audioTranscript)
+        correction = await generateMessageCorrection(audioTranscript, promptsLanguage)
         correctedUserBlock = await getCorrectedUserBlock(audioTranscript, correction.isCorrect, userBlockId)
         blockList.current = blockList.current.map((v, i) => {
             if (i == userBlockId) {

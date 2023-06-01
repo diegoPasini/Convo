@@ -75,7 +75,7 @@ function getMessageHistory(messages) {
 	return [messages.system, ...messages.chatHistory]
 }
 
-export const generateMessageCorrection = async (message) => {
+export const generateMessageCorrection = async (message, prompts) => {
 
 	if (message.length == 0) {
 		console.warn("Invalid message for correction")
@@ -84,17 +84,8 @@ export const generateMessageCorrection = async (message) => {
 		console.log("Valid correction message")
 	}
 
-	const prompt = `Responde con 1 si el siguiente mensaje tiene gramática totalmente correctas y tiene sentido.
-	Si tiene alguno error, responde con 0 y explica por qué con una lista con viñetas.
-	Example:
-	User: [Mensaje]
-	Tu:
-	0
-	Listo de errores:
-	- "frase incorrecta" -> "frase corregida"
-	- "frase incorrecta" -> "frase corregida"
-
-	User: 
+	const prompt = prompts.gptCorrectionPrompt + 
+	`User: 
 	${message}
 
 	Tu:`
