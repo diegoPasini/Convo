@@ -1,6 +1,5 @@
 import { Configuration, OpenAIApi } from "openai";
 import { OPENAI_API_KEY } from "@env";
-const samantha = require("./samantha.mp3")
 import * as FileSystem from 'expo-file-system';
 import { Asset } from 'expo-asset';
 import { Audio } from "expo-av";
@@ -34,21 +33,16 @@ export const transcribeAudio = async (req, prompts) =>  {
 		return
 	}
 	
-	try {
-		response = await whisperFetch(uri, prompts)
-		// console.log(response)
-		resJson = await response.json()
-		console.log(resJson)
-		return resJson;
-	} catch(error) {
-	  // Consider adjusting the error handling logic for your use case
-	  if (error.response) {
-		console.error(error.response.status, error.response.data);
-		res.status(error.response.status).json(error.response.data);
-	  } else {
-		console.error(`Error with OpenAI API request: ${error.message}`);
-	  }
+	response = await whisperFetch(uri)
+	resJson = await response.json()
+	console.log(resJson)
+
+	if (response.status != 200) {
+		throw new Error(`Error with Deepgram request: ${resJson.err_code} - ${resJson.err_msg}`)
 	}
+	// console.log(response)
+	transcript = resJson.text
+	return transcript;
 }
 
 
@@ -80,19 +74,6 @@ async function whisperFetch(uri, prompts) {
 
 
 
-
-// used for testing -- recreates an audio file from a base64 string and plays it
-async function recreateAndPlay(base64) {
-    const newUri = FileSystem.cacheDirectory + "samantha2.mp3"
-    await FileSystem.writeAsStringAsync(newUri, base64, {
-        encoding: FileSystem.EncodingType.Base64,
-    });
-
-    console.log("newUri = " + newUri)
-    const sound = new Audio.Sound()
-    await sound.loadAsync({uri: newUri})
-    await sound.playAsync();
-}
 
 
 
