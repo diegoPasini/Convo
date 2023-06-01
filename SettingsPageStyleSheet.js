@@ -13,16 +13,58 @@ export const SettingsPageStyleSheet = StyleSheet.create({
   	},
 
     titleContainer:{
-        flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        paddingTop: 60,
+                // position: 'absolute',
+        // top: 20,
+        // left: 20,
+        paddingTop: 40,
         
     },
 
     title:{
         fontSize:50,
         textAlign: 'center',
+    },
+
+    languageSelector:{
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        
+        // position: 'absolute',
+        // top: 20,
+        // left: 20,
+    },
+
+    languageButton:{
+        flexDirection: 'row',
+        borderColor: "black",
+	    borderRadius: 30,
+        borderWidth: 3,
+        marginTop: 20,
+        height: 100,
+        width: 325,
+        //color:'#f2f2f2',
+        marginLeft: 20,
+    },
+    
+    flag:{
+	    resizeMode: "contain",
+        marginTop: -5,
+    },
+
+    languageSelectionText:{
+        marginLeft: 25,
+        marginTop: 23,
+        fontSize: 30,
+        color: 'black',
+    },
+
+    overlay:{
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'rgba(0, 0, 255, 0.25)',
+        borderRadius: 24,
+        
     },
 
     exitButtonContainer:{
@@ -32,9 +74,10 @@ export const SettingsPageStyleSheet = StyleSheet.create({
     },
     
     exitButton:{
+        marginTop: 30,
         paddingVertical: 10,
         paddingHorizontal: 20,
-        borderRadius: 5,
+        borderRadius: 3,
         backgroundColor: 'gray',
     },
 

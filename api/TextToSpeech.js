@@ -4,14 +4,14 @@ import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system';
 import { TTS_KEY } from "@env"
 
-export const textToSpeech = async (text) => {
+export const textToSpeech = async (text, prompts) => {
   console.log("Started")
   //const key = Platform.OS == 'ios' ? KEY_IOS : KEY_ANDROID
   const key = TTS_KEY
   console.log("Key " +  key)
   //bearer = 'Bearer ' + KEY_ANDROID
   const address = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${key}`
-  const payload = createRequest(text)
+  const payload = createRequest(text, prompts)
   //Integrate with expo
   const path = FileSystem.cacheDirectory + "voice1.mp3"
 
@@ -19,6 +19,8 @@ export const textToSpeech = async (text) => {
     console.log(text)
     const response = await fetch(`${address}`, payload)
     console.log("Fetched API")
+    console.log(prompts[0]["ttsLanguageCode"])
+    console.log(prompts[0]["ttsName"])
     const result = await response.json()
     // console.log(result)
     await recreateAndPlay(path, result.audioContent)
@@ -34,7 +36,7 @@ export const textToSpeech = async (text) => {
  * @param {*} text The text that the text to speech model will say 
  * @returns Returns null 
  */
-const createRequest = (text) => ({
+const createRequest = (text, prompts) => ({
   method: 'POST',
   //File type is in json
   headers: {
@@ -49,8 +51,8 @@ const createRequest = (text) => ({
 
   //Specifying the type of voice and langage
   voice:{
-    languageCode: 'es-ES',
-    name: 'es-ES-Wavenet-D',
+    languageCode: prompts[0]["ttsLanguageCode"],
+    name: prompts[0]["ttsName"],
     ssmlGender: 'FEMALE'
   },
 
