@@ -27,7 +27,7 @@ export default function ConvoPage({navigation}) {
     const [messageHistory, setMessageHistory] = useState({
         system:
         {
-            role: "user",
+            role: "system",
             content: "Vas a hablar SOLO en español con el user y continuar la conversación. Responde en 15 palabras o menos"
         },
         chatHistory: [],
@@ -39,78 +39,66 @@ export default function ConvoPage({navigation}) {
     const correctionList = useRef({})
 
 
+
+
+    async function startRecording() {
+        // Speech.stop()
+        try {
+            setRecordingState("recording")
+            console.log('Requesting permissions..');
+            await Audio.requestPermissionsAsync();
+            await Audio.setAudioModeAsync({
+            allowsRecordingIOS: true,
+            playsInSilentModeIOS: true,
+            });
+
+            console.log('Starting recording..');
+            const { recording } = await Audio.Recording.createAsync( Audio.RecordingOptionsPresets.HIGH_QUALITY
+            );
+            setRecording(recording);
+            console.log('Recording started');
+        } catch (err) {
+            console.error('Failed to start recording', err);
+        }
+    }
+
+    async function stopRecording() {
+        console.log('Stopping recording..');
+        setRecording(undefined);
+        setRecordingState("recorded")
+        await recording.stopAndUnloadAsync();
+        await Audio.setAudioModeAsync({
+            allowsRecordingIOS: false,
+        });
+        const uri = recording.getURI();
+        setLatestUri(uri)
+        console.log('Recording stopped and stored at', uri);
+        return uri;
+    }
+
     async function getGPTResponse(promptInput) {
-
-    try {
-
         const response = await generateConvoResponse({prompt: promptInput, messages: messageHistory})
 
         const data = await response;
         if (response == undefined) {
-        throw new Error(`Request failed`);
+            throw new Error(`Request failed`);
         }
         setMessageHistory(response)
         return (data.latest).trim() //remove whitespace
         // setPromptInput("");
-    } catch(error) {
-        // Consider implementing your own error handling logic here
-        console.error(error);
-        alert(error.message);
-    }
-    }
-
-    async function startRecording() {
-    // Speech.stop()
-    try {
-        setRecordingState("recording")
-        console.log('Requesting permissions..');
-        await Audio.requestPermissionsAsync();
-        await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
-        });
-
-        console.log('Starting recording..');
-        const { recording } = await Audio.Recording.createAsync( Audio.RecordingOptionsPresets.HIGH_QUALITY
-        );
-        setRecording(recording);
-        console.log('Recording started');
-    } catch (err) {
-        console.error('Failed to start recording', err);
-    }
-    }
-
-    async function stopRecording() {
-    console.log('Stopping recording..');
-    setRecording(undefined);
-    setRecordingState("recorded")
-    await recording.stopAndUnloadAsync();
-    await Audio.setAudioModeAsync({
-        allowsRecordingIOS: false,
-    });
-    const uri = recording.getURI();
-    setLatestUri(uri)
-    console.log('Recording stopped and stored at', uri);
-    return uri;
     }
 
     async function getAudioTranscript(inputUri = undefined) {
-    console.log("Audio submitted")
+        console.log("Audio submitted")
 
-    uri = inputUri ? inputUri : latestUri
-    try {
+        uri = inputUri ? inputUri : latestUri
         const response = await transcribeAudio({uri: uri})
         const data = await response;
         if (response == undefined) {
-        throw new Error("Audio request failed")
+            throw new Error("Audio request failed")
         }
 
-        return data.text
-    } catch(error) {
-        // Consider implementing your own error handling logic here
-        console.error(error);
-        alert(error.message);
-    }
+        return data
     }
 
     async function speakResponse(text) {
@@ -121,46 +109,52 @@ export default function ConvoPage({navigation}) {
 
     async function onSendRecording(event) {
         event.preventDefault()
-        setSendingStatus(true);
-        if (recording) {
-            uri = await stopRecording()
-            audioTranscript = await getAudioTranscript(uri);
-        } else {
-            audioTranscript = await getAudioTranscript();
-        }
-        console.log("out of audio")
-        // setTranscript(audioTranscript)
-        userBlockId = blockList.current.length
-        aiBlockId = userBlockId + 1
-        userBlock = createUserBlock(audioTranscript, userBlockId)
-        blockList.current = [...blockList.current, userBlock]
-        setBlocks(blockList.current)
-
-        response = await getGPTResponse(audioTranscript)
-        aiBlock = createAIBlock(response, aiBlockId)
-        blockList.current = [...blockList.current, aiBlock]
-        setBlocks(blockList.current)
-
-        await speakResponse(response);
-        // setLatestUri(undefined) // remove previous recording
-        setRecordingState("none")
-        setSendingStatus(false)
-
-        correction = await generateMessageCorrection(audioTranscript)
-        correctedUserBlock = await getCorrectedUserBlock(audioTranscript, correction.isCorrect, userBlockId)
-        blockList.current = blockList.current.map((v, i) => {
-            if (i == userBlockId) {
-                return correctedUserBlock;
+        
+        try {
+            setSendingStatus(true);
+            if (recording) {
+                uri = await stopRecording()
+                audioTranscript = await getAudioTranscript(uri);
             } else {
-                return v;
+                audioTranscript = await getAudioTranscript();
             }
-        });
+            console.log("out of audio")
+            // setTranscript(audioTranscript)
+            userBlockId = blockList.current.length
+            aiBlockId = userBlockId + 1
+            userBlock = createUserBlock(audioTranscript, userBlockId)
+            blockList.current = [...blockList.current, userBlock]
+            setBlocks(blockList.current)
 
-        setBlocks(blockList.current)
-        console.log("correction")
-        console.log(correction.correction)
-        correctionList.current[userBlockId] = correction.correction
+            response = await getGPTResponse(audioTranscript)
+            aiBlock = createAIBlock(response, aiBlockId)
+            blockList.current = [...blockList.current, aiBlock]
+            setBlocks(blockList.current)
 
+            await speakResponse(response);
+            // setLatestUri(undefined) // remove previous recording
+            setRecordingState("none")
+            setSendingStatus(false)
+
+            correction = await generateMessageCorrection(audioTranscript)
+            correctedUserBlock = await getCorrectedUserBlock(audioTranscript, correction.isCorrect, userBlockId)
+            blockList.current = blockList.current.map((v, i) => {
+                if (i == userBlockId) {
+                    return correctedUserBlock;
+                } else {
+                    return v;
+                }
+            });
+
+            setBlocks(blockList.current)
+            console.log("correction")
+            console.log(correction.correction)
+            correctionList.current[userBlockId] = correction.correction
+        } catch (error) {
+			console.error(error);
+      		alert(error.message);
+		}
+		
 
     }
 

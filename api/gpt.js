@@ -18,8 +18,8 @@ export const generateConvoResponse = async (req) =>  {
 
 	const prompt = req.prompt || '';
 	var messages = req.messages;
-	console.log("prompt: " + prompt)
-	if (prompt.trim().length === 0) {
+	console.log("prompt: '" + prompt + "'")
+	if (prompt == "" || prompt.trim().length === 0) {
 		console.warn("Please enter a valid prompt")
 		return;
 	} else if (messages == undefined) {
