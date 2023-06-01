@@ -25,20 +25,21 @@ export default function ConvoPage({navigation}) {
     const blockList = useRef([])
     const [modalVisible, setModalVisible] = useState(false);
     const [messageCorrection, setMessageCorrection] = useState("")
-    const prompts = require('./prompts/generalizedPrompts.json');
+    
     //console.log(prompts.Spanish);
     //const promptsLanguage ={};\
     //console.log(global.language)
     //console.log(global.language === "English")
+    prompts = require('./prompts/generalizedPrompts.json')
     if(global.language === "Spanish")
         promptsLanguage = prompts.Spanish
     else if(global.language === "French")
         promptsLanguage = prompts.French
     else if(global.language === "English")
-        promptsLanguage = prompts.Spanish
-    
+        promptsLanguage = prompts.English
     //console.log(promptsLanguage[0]["ttsName"])
     //console.log(promptsLanguage['ttsName'])
+    //console.log("Reinstructing", promptsLanguage[0]["systemInstruction"])
     const [messageHistory, setMessageHistory] = useState({
         system:
         {
@@ -48,13 +49,10 @@ export default function ConvoPage({navigation}) {
         chatHistory: [],
         latest: {},
     })
-
+    
 
     const scrollViewRef = useRef();
     const correctionList = useRef({})
-
-
-
 
     async function startRecording() {
         // Speech.stop()
@@ -92,7 +90,7 @@ export default function ConvoPage({navigation}) {
     }
 
     async function getGPTResponse(promptInput) {
-        const response = await generateConvoResponse({prompt: promptInput, messages: messageHistory})
+        const response = await generateConvoResponse({prompt: promptInput, messages: messageHistory}, promptsLanguage)
 
         const data = await response;
         if (response == undefined) {
@@ -120,7 +118,7 @@ export default function ConvoPage({navigation}) {
         textToSpeech(text, promptsLanguage);
     }
 
-
+    
 
     async function onSendRecording(event) {
         event.preventDefault()
@@ -241,6 +239,25 @@ export default function ConvoPage({navigation}) {
             setModalVisible(true)
         }
     }
+    
+    
+
+    // useEffect(()=> {
+    //     if(global.language === "Spanish")
+    //         promptsLanguage = prompts.Spanish
+    //     else if(global.language === "French")
+    //         promptsLanguage = prompts.French
+    //     else if(global.language === "English")
+    //         promptsLanguage = prompts.English
+    //     setBlocks([])
+    //     setMessageHistory({system:
+    //         {
+    //             role: "system",
+    //             content: promptsLanguage[0]["systemInstruction"]
+    //         },
+    //         chatHistory: [],
+    //         latest: {},})
+    // }, []);
 
     return (
 	
@@ -257,7 +274,7 @@ export default function ConvoPage({navigation}) {
 		</Modal>
 		
 		<View style={ConvoPageStyleSheet.titleContainer}>
-            <TouchableOpacity style={ConvoPageStyleSheet.settingsButton} onPress={()=>{navigation.navigate('SettingsPage')}}>
+            <TouchableOpacity style={ConvoPageStyleSheet.settingsButtonContainer} onPress={()=>{navigation.navigate('SettingsPage')}}>
 				<Image source={require('./assets/settings.png')}  style={ConvoPageStyleSheet.settingsButton} />
 			</TouchableOpacity>
 			<Text style={ConvoPageStyleSheet.title}>Convo</Text>

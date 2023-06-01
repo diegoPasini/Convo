@@ -8,6 +8,8 @@ export default function SettingsPage({navigation}) {
     const [spanishShowView, setShowViewSpanish] = useState(global.language === 'Spanish');
     const [frenchShowView, setShowViewFrench] = useState(global.language === 'French');
     const [englishShowView, setShowViewEnglish] = useState(global.language === 'English');
+    const originalLanguage = global.language
+    //const[languageChanged, setLanguageChange] = false
 
     function setLanguage(language){
         if(global.language !== language){

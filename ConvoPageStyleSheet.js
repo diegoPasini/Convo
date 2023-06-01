@@ -61,31 +61,37 @@ export const ConvoPageStyleSheet = StyleSheet.create({
 
   	titleContainer: {
 		width:"100%",
-		height:100,
+		height:80,
 		marginTop:40,
-		justifyContent: 'center',
-  	},
+		//justifyContent: ,
+		flexDirection: 'row-reverse',
+	},
 
+	settingsButtonContainer:{
+		width: 45,
+		marginTop: 20,
+	},
+	
 	settingsButton:{
-		height: 50,
-		width: 50,
+		height: 35,
+		width: 35,
 		//flex: 1,
-		marginTop: 12,
-		marginLeft: 10, 
+		marginTop: 8,
+		marginRight: 7, 
 		position: 'absolute',
 	},
 
 	title: {
 		fontSize:50,
 		alignSelf: 'center',
-		
+		marginRight: 70
 	},
 
   	convoWrapper: {
 		width:"100%",
-		height:"65%",
-		borderBottomWidth: 10,
-		borderTopWidth: 10,
+		height:"70%",
+		borderBottomWidth: 5,
+		borderTopWidth: 5,
 		borderColor:"black",
   	},
 
@@ -113,7 +119,7 @@ export const ConvoPageStyleSheet = StyleSheet.create({
 	alignItems: 'center',
 	flexDirection:"row",
     justifyContent: "space-evenly",
-	height: buttonHeight+100,
+	height: buttonHeight+50,
   },
 
 

@@ -1,7 +1,6 @@
 import { Configuration, OpenAIApi } from "openai";
 import { OPENAI_API_KEY } from "@env";
 
-const trailingMessage = " (Responde en menos de 35 palabras y hazme una pregunta)"
 
 const configuration = new Configuration({
   apiKey: OPENAI_API_KEY,
@@ -9,7 +8,7 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 const numSavedMessages = 4
 
-export const generateConvoResponse = async (req) =>  {
+export const generateConvoResponse = async (req, prompts) =>  {
 
 	if (!configuration.apiKey) {
 		console.warn("No API key")
@@ -29,8 +28,10 @@ export const generateConvoResponse = async (req) =>  {
 	}
 
 	try {
-		updateMessageHistory(messages, prompt)
-		messageHistory = getMessageHistory(messages)
+		console.log("Messages", messages )
+		console.log("Prompt", prompt )
+		updateMessageHistory(messages, prompt, prompts)
+		messageHistory = getMessageHistory(messages, prompts)
 		console.log("message history:")
 		console.log(messageHistory)
 		const completion = await openai.createChatCompletion({
@@ -63,9 +64,11 @@ export const generateConvoResponse = async (req) =>  {
   return res;
 }
 
-function updateMessageHistory(messages, prompt) {
+function updateMessageHistory(messages, prompt, prompts) {
 	console.log("length")
 	console.log(messages.chatHistory.length)
+	const trailingMessage = prompts[0]["trailingMessage"]
+
 	if (messages.chatHistory.length > 0) {
 		// remove trailing message at end of previous prompt
 		// -2 because user messages are every other
@@ -81,10 +84,16 @@ function updateMessageHistory(messages, prompt) {
 	messages.chatHistory = newHistory
 }
 
-function getMessageHistory(messages) {
-	if (messages.system != undefined)
-		return [messages.system, ...messages.chatHistory]
-	else
+function getMessageHistory(messages, prompts) {
+	if (messages.system != undefined) {
+		console.log("system emssage")
+		// console.log( prompts[0]["systemInstruction"])
+		systemMessage = {"role": "system", "content": prompts[0]["systemInstruction"]}
+		console.log(systemMessage)
+		// console.log(systemMessage.content)
+		return [systemMessage, ...messages.chatHistory]
+		// return messages.chatHistory
+	} else
 		return messages.chatHistory
 }
 
