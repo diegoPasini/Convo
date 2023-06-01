@@ -26,25 +26,24 @@ export default function ConvoPage({navigation}) {
     const [modalVisible, setModalVisible] = useState(false);
     const [messageCorrection, setMessageCorrection] = useState("")
     const prompts = require('./prompts/generalizedPrompts.json');
-    //console.log(data.);
+    //console.log(prompts.Spanish);
     //const promptsLanguage ={};\
-
-    switch(global.language){
-        case 'Spanish':
-            promptsLanguage = prompts.Spanish
-        case 'French':
-            promptsLanguage = prompts.French
-        case 'English':
-            promptsLanguage = prompts.English
-    }      
+    //console.log(global.language)
+    //console.log(global.language === "English")
+    if(global.language === "Spanish")
+        promptsLanguage = prompts.Spanish
+    else if(global.language === "French")
+        promptsLanguage = prompts.French
+    else if(global.language === "English")
+        promptsLanguage = prompts.Spanish
     
-    console.log(promptsLanguage)
+    //console.log(promptsLanguage[0]["ttsName"])
     //console.log(promptsLanguage['ttsName'])
     const [messageHistory, setMessageHistory] = useState({
         system:
         {
             role: "user",
-            content: promptsLanguage.systemInstruction
+            content: promptsLanguage[0]["systemInstruction"]
         },
         chatHistory: [],
         latest: {},
@@ -120,7 +119,7 @@ export default function ConvoPage({navigation}) {
         if (response == undefined) {
         throw new Error("Audio request failed")
         }
-
+        //console.log("Text: ", response.text)
         return data.text
     } catch(error) {
         // Consider implementing your own error handling logic here

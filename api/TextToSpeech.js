@@ -19,6 +19,8 @@ export const textToSpeech = async (text, prompts) => {
     console.log(text)
     const response = await fetch(`${address}`, payload)
     console.log("Fetched API")
+    console.log(prompts[0]["ttsLanguageCode"])
+    console.log(prompts[0]["ttsName"])
     const result = await response.json()
     // console.log(result)
     await recreateAndPlay(path, result.audioContent)
@@ -49,8 +51,8 @@ const createRequest = (text, prompts) => ({
 
   //Specifying the type of voice and langage
   voice:{
-    languageCode: prompts.ttsLanguageCode,
-    name: prompts.ttsName,
+    languageCode: prompts[0]["ttsLanguageCode"],
+    name: prompts[0]["ttsName"],
     ssmlGender: 'FEMALE'
   },
 

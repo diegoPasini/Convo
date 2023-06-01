@@ -33,7 +33,7 @@ export const transcribeAudio = async (req, prompts) =>  {
 		return
 	}
 	
-	response = await whisperFetch(uri)
+	response = await whisperFetch(uri, prompts)
 	resJson = await response.json()
 	console.log(resJson)
 
@@ -42,6 +42,7 @@ export const transcribeAudio = async (req, prompts) =>  {
 	}
 	// console.log(response)
 	transcript = resJson.text
+	console.log("Text: ", resJson.text)
 	return transcript;
 }
 
@@ -58,7 +59,8 @@ async function whisperFetch(uri, prompts) {
 	});
 
 	formData.append("model", "whisper-1");
-	formData.append("language", prompts.whisperLanguage)
+	console.log(prompts[0]["whisperLanguage"])
+	formData.append("language", prompts[0]["whisperLanguage"])
 
 	result = await fetch(url, {
 		method: 'POST',
