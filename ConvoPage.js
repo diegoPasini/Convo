@@ -198,7 +198,7 @@ export default function ConvoPage({navigation}) {
                 color = "red"
                 break;
             default:
-                color = "black"
+                color = "#ffff"
                 break;
         }
         if (correctness == "incorrect") {
@@ -206,8 +206,11 @@ export default function ConvoPage({navigation}) {
                 <TouchableOpacity 
                     key={key} 
                     onPress={() => onUserBlockPressed(key, correctness)}
-                    style={[blockStyles.conversationBlock, ConvoPageStyleSheet.userInput, {borderColor: color}]}>
-                    <Text style={blockStyles.conversationAuthor}>You:</Text>
+                    style={[blockStyles.conversationBlock, ConvoPageStyleSheet.userInput, {borderColor: color, borderWidth: 6,}]}>
+                    <View style={blockStyles.authorContainer}>
+                        <View style={[blockStyles.userIcon, , {backgroundColor: "#7eb1dc"}]}></View>
+                        <Text style={blockStyles.conversationAuthor}>You</Text>
+                    </View>
                     <Text style={blockStyles.conversationText}>{text}</Text>
                 </TouchableOpacity>
             )
@@ -215,8 +218,11 @@ export default function ConvoPage({navigation}) {
             return (
                 <View 
                     key={key} 
-                    style={[blockStyles.conversationBlock, ConvoPageStyleSheet.userInput, {borderColor: color}]}>
-                    <Text style={blockStyles.conversationAuthor}>You:</Text>
+                    style={[blockStyles.conversationBlock, ConvoPageStyleSheet.userInput, {borderColor: color, borderWidth: 6,}]}>
+                    <View style={blockStyles.authorContainer}>
+                        <View style={[blockStyles.userIcon, , {backgroundColor: "#7eb1dc"}]}></View>
+                        <Text style={blockStyles.conversationAuthor}>You</Text>
+                    </View>
                     <Text style={blockStyles.conversationText}>{text}</Text>
                 </View>
             )

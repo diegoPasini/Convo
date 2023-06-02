@@ -61,45 +61,45 @@ export const ConvoPageStyleSheet = StyleSheet.create({
 
   	titleContainer: {
 		width:"100%",
-		height:80,
-		marginTop:40,
+		height:60,
+		marginTop:10,
 		//justifyContent: ,
 		flexDirection: 'row-reverse',
 	},
 
 	settingsButtonContainer:{
 		width: 45,
-		marginTop: 20,
+		marginTop: 15,
 	},
 	
 	settingsButton:{
-		height: 35,
-		width: 35,
+		height: 30,
+		width: 30,
 		//flex: 1,
-		marginTop: 8,
+		marginTop: 5,
 		marginRight: 7, 
 		position: 'absolute',
 	},
 
 	title: {
-		fontSize:50,
+		fontSize:40,
 		alignSelf: 'center',
-		marginRight: 70
+		marginRight: 80
 	},
 
   	convoWrapper: {
 		width:"100%",
 		height:"70%",
-		borderBottomWidth: 5,
-		borderTopWidth: 5,
-		borderColor:"black",
+		borderBottomWidth: 2,
+		borderTopWidth: 2,
+		borderColor:"gray",
   	},
 
 	conversationContainer: {
 		width:"100%",
-		paddingHorizontal:10,
-		paddingBottom:40,
-		paddingTop:10,
+		//paddingHorizontal:10,
+		//paddingBottom:40,
+		//paddingTop:10,
 		overflow: "hidden",
 	},
 
@@ -109,7 +109,7 @@ export const ConvoPageStyleSheet = StyleSheet.create({
   },
 
   userInput: {
-	backgroundColor: "#4f95db"
+	//backgroundColor: "#daf3ff"
   },
 
 
@@ -130,10 +130,11 @@ export const ConvoPageStyleSheet = StyleSheet.create({
     justifyContent: 'center',
 	backgroundColor: "white",
 	borderColor: "black",
-	borderWidth: 5,
+	borderWidth: 3,
 	borderRadius: buttonHeight/2,
 	marginLeft:buttonSeparation,
-	marginRight:buttonSeparation
+	marginRight:buttonSeparation,
+	marginBottom:15,
   },
 
   img: {

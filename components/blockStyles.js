@@ -2,27 +2,45 @@ import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Image, Scr
 
 
 export const blockStyles = StyleSheet.create({
-  conversationBlock: {
-	borderColor: "black",
-	borderWidth: 3,
-	marginBottom:10,
-	minHeight: 100,
+  
+	conversationBlock: {
+	//borderColor: "black",
+	//borderWidth: 3,
+	marginBottom:0,
+	minHeight: 80,
 	flexDirection:"column",
     // justifyContent: "space-evenly",
-	borderRadius:25,
-	padding:10
+	//borderRadius:25,
+	padding:10,
+	paddingHorizontal:10,
 	
   },
   conversationText: {
 	color:"black",
-	fontSize:20,
+	fontSize:17,
 	marginTop:10,
 	marginBottom:5,
+  },
+
+  authorContainer:{
+	//flex: 1,
+	flexDirection: 'row',
+	//height: 50,
+  },
+
+  userIcon:{
+	width: 12,
+	height: 12,
+	borderRadius:12/2,
+	marginTop:5,
+	backgroundColor: 'green',
   },
 
   conversationAuthor: {
 	position:"relative",
 	top:0,
+	marginLeft: 5,
+	fontSize:15,
   },
 
 })

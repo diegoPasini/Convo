@@ -30,20 +30,29 @@ export class AiBlock extends Component {
 
     render() {
         return (
-            <TouchableOpacity onPress={() => this.toggleHidden()}>
+            //<TouchableOpacity onPress={() => this.toggleHidden()}>
 
-                <View style={[blockStyles.conversationBlock, aiStyles.aiResponse]}>
-                    <Text style={blockStyles.conversationAuthor}>Gabriela P. Toro:</Text>
-                    <Text style={[blockStyles.conversationText, this.state.textStyle]}>{this.state.displayedText}</Text>
+                <View style={aiStyles.aiResponse}>
+                    <View style={blockStyles.conversationBlock}>
+                    <View style={blockStyles.authorContainer}>
+                        <View style={blockStyles.userIcon}></View>
+                        <Text style={blockStyles.conversationAuthor}>Convo</Text>
+                    </View>
+                    <Text style={[blockStyles.conversationText, aiStyles.noStyle]}>{this.text}</Text>
+                    {/* //<Text style={[blockStyles.conversationText, this.state.textStyle]}>{this.state.displayedText}
+                    //</Text> */}
                 </View>
-            </TouchableOpacity>
+                </View>
+                
+            //</TouchableOpacity>
     )}
 }
 
 const aiStyles = StyleSheet.create({
     aiResponse: {
-        backgroundColor: "#d2d3d4",
-
+        backgroundColor: "#daf3ff",
+        alignItems: 'stretch',
+        
     },
     
     hiddenText: {
