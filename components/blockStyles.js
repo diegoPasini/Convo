@@ -33,7 +33,7 @@ export const blockStyles = StyleSheet.create({
 	height: 12,
 	borderRadius:12/2,
 	marginTop:5,
-	backgroundColor: 'green',
+	backgroundColor: 'gray',
   },
 
   conversationAuthor: {

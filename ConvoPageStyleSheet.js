@@ -63,28 +63,30 @@ export const ConvoPageStyleSheet = StyleSheet.create({
 		width:"100%",
 		height:60,
 		marginTop:10,
-		//justifyContent: ,
+		justifyContent: "center",
 		flexDirection: 'row-reverse',
+
 	},
 
 	settingsButtonContainer:{
-		width: 45,
-		marginTop: 15,
+		height: "100%",
+		position: 'absolute',
+		left:10,
+		alignContent:"center",
+		justifyContent: "center",
 	},
 	
 	settingsButton:{
 		height: 30,
 		width: 30,
 		//flex: 1,
-		marginTop: 5,
-		marginRight: 7, 
-		position: 'absolute',
+
 	},
 
 	title: {
 		fontSize:40,
-		alignSelf: 'center',
-		marginRight: 80
+		// alignSelf: 'center',
+		// marginRight: 80
 	},
 
   	convoWrapper: {

@@ -198,7 +198,7 @@ export default function ConvoPage({navigation}) {
                 color = "red"
                 break;
             default:
-                color = "#ffff"
+                color = "gray"
                 break;
         }
         if (correctness == "incorrect") {
@@ -206,9 +206,9 @@ export default function ConvoPage({navigation}) {
                 <TouchableOpacity 
                     key={key} 
                     onPress={() => onUserBlockPressed(key, correctness)}
-                    style={[blockStyles.conversationBlock, ConvoPageStyleSheet.userInput, {borderColor: color, borderWidth: 6,}]}>
+                    style={[blockStyles.conversationBlock, ConvoPageStyleSheet.userInput]}>
                     <View style={blockStyles.authorContainer}>
-                        <View style={[blockStyles.userIcon, , {backgroundColor: "#7eb1dc"}]}></View>
+                        <View style={[blockStyles.userIcon, , {backgroundColor: color}]}></View>
                         <Text style={blockStyles.conversationAuthor}>You</Text>
                     </View>
                     <Text style={blockStyles.conversationText}>{text}</Text>
@@ -218,9 +218,9 @@ export default function ConvoPage({navigation}) {
             return (
                 <View 
                     key={key} 
-                    style={[blockStyles.conversationBlock, ConvoPageStyleSheet.userInput, {borderColor: color, borderWidth: 6,}]}>
+                    style={[blockStyles.conversationBlock, ConvoPageStyleSheet.userInput]}>
                     <View style={blockStyles.authorContainer}>
-                        <View style={[blockStyles.userIcon, , {backgroundColor: "#7eb1dc"}]}></View>
+                        <View style={[blockStyles.userIcon, , {backgroundColor: color}]}></View>
                         <Text style={blockStyles.conversationAuthor}>You</Text>
                     </View>
                     <Text style={blockStyles.conversationText}>{text}</Text>
