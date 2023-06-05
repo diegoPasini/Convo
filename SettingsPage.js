@@ -9,6 +9,7 @@ export default function SettingsPage({navigation}) {
     const [frenchShowView, setShowViewFrench] = useState(global.language === 'French');
     const [englishShowView, setShowViewEnglish] = useState(global.language === 'English');
     const originalLanguage = global.language
+    
     //const[languageChanged, setLanguageChange] = false
 
     function setLanguage(language){
@@ -38,18 +39,18 @@ export default function SettingsPage({navigation}) {
         <SafeAreaView style={SettingsPageStyleSheet.container}>
             <View style={SettingsPageStyleSheet.titleContainer}>
                 <Text style={SettingsPageStyleSheet.title}>
-                    Settings
+                    {global.settingsTitle}
                 </Text>
             </View>
             <View style={SettingsPageStyleSheet.langugeSelector}>
                 <TouchableOpacity style={SettingsPageStyleSheet.languageButton} onPress={()=>{setLanguage("Spanish")}}>
                     <Image source={require('./assets/Spanish.png')}  style={SettingsPageStyleSheet.flag} />
-                    <Text style={SettingsPageStyleSheet.languageSelectionText}>Spanish</Text>
+                    <Text style={SettingsPageStyleSheet.languageSelectionText}>{global.appText.spanishText}</Text>
                     {spanishShowView && <View style={SettingsPageStyleSheet.overlay}/>}
                 </TouchableOpacity>
                 <TouchableOpacity style={SettingsPageStyleSheet.languageButton} onPress={()=>{setLanguage("French")}}>
                     <Image source={require('./assets/French.png')}  style={SettingsPageStyleSheet.flag} />
-                    <Text style={SettingsPageStyleSheet.languageSelectionText}>French</Text>
+                    <Text style={SettingsPageStyleSheet.languageSelectionText}>{global.appText.frenchText}</Text>
                     {frenchShowView && <View style={SettingsPageStyleSheet.overlay}/>}
                 </TouchableOpacity>
                 <TouchableOpacity style={SettingsPageStyleSheet.languageButton} onPress={()=>{setLanguage("English")}}>
@@ -60,7 +61,7 @@ export default function SettingsPage({navigation}) {
             </View>
             <View style={SettingsPageStyleSheet.exitButtonContainer}>
                 <TouchableOpacity style={SettingsPageStyleSheet.exitButton} onPress={()=>{navigation.navigate('ConvoPage')}}>
-                    <Text style={SettingsPageStyleSheet.exitButtonText}>Exit</Text>
+                    <Text style={SettingsPageStyleSheet.exitButtonText}>{global.appText.settingsClose}</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
