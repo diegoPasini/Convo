@@ -1,0 +1,17 @@
+{
+    "english": {
+        "appTitle": "Convo",
+        "correctionsTitle": "List of errors",
+        "settingsTitle": "Settings",
+        "settingsClose": "Done",
+        "touchToReveal": "Touch to reveal",
+        "userTitle": "You",
+        "spanishText": "Español",
+        "frenchText": "Français",
+        "mandarinText": "汉语 (Mandarin)",
+        "koreanText": "한국어",
+        "russianText": "русский язык",
+        "englishText": "English",
+        "hebrewText": "עִבְרִית"
+    }
+}

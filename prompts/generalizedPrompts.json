@@ -1,28 +1,37 @@
 {
-    "Spanish":[{
+    "spanish":{
         "systemInstruction": "Vas a hablar SOLO en español con el user y continuar la conversación. Responde en 15 palabras o menos",     
         "whisperLanguage": "es",
         "trailingMessage": " (Responde en menos de 35 palabras y hazme una pregunta)",
         "gptCorrectionPrompt": "Responde con 1 si el siguiente mensaje tiene gramática totalmente correctas y tiene sentido. Si tiene alguno error, responde con 0 y explica por qué con una lista con viñetas. \n Example: \n User: [Mensaje] \n Tu: \n 0 \n Listo de errores: \n - \"frase incorrecta\" -> \"frase corregida\"  \n - \"frase incorrecta\" -> \"frase corregida\"",
         "ttsLanguageCode": "es-ES",
         "ttsName": "es-ES-Wavenet-D"
-    }],
+    },
 
-    "French":[{
+    "french":{
         "systemInstruction": "Tu vas parler SEULEMENT en français avec l'utilisateur et poursuivre la conversation. Réponds en 15 mots ou moins.",
         "whisperLanguage":"fr",
         "trailingMessage": " (Répondez en moins de 35 mots et posez-moi une question.)",
         "gptCorrectionPrompt":"Réponds avec 1 si le message suivant a une grammaire totalement correcte et a du sens. Si il y a des erreurs, réponds avec 0 et explique pourquoi avec une liste à puces. \n Exemple:\n Utilisateur: [Message] \n Toi: \n 0 \n Liste d'erreurs: \n \"Phrase incorrecte\" -> \"Phrase corrigée\" \n \"Phrase incorrecte\" -> \"Phrase corrigée\"",
         "ttsLanguageCode": "fr-FR",
         "ttsName": "fr-FR-Wavenet-A"
-    }],
+    },
+    "English":{
+        "systemInstruction": "You will speak ONLY in English with the user and continue the conversation. Respond in 15 words or less.",
+        "whisperLanguage":"en",
+        "trailingMessage": " (Respond in fewer than 35 words and ask me a question.)",
+        "gptCorrectionPrompt":"Respond with 1 if the following message has completely correct grammar and makes sense. If there are errors, respond with 0 and explain why with a bulleted list. \n Example: \n User: [Message] \n You: \n 0 \n Error list: \n - \"Incorrect phrase\" -> \"Corrected phrase\" \n - \"Incorrect phrase\" -> \"Corrected phrase\"",
+        "ttsLanguageCode": "en-GB",
+        "ttsName": "en-GB-News-G"
+    },
 
-    "English":[{
+    "Mandarin":{
         "systemInstruction": "你将只用普通话与用户交谈，并继续对话。回答不超过15个字。",
         "whisperLanguage":"zh",
         "trailingMessage": " （回答不超过35个字，并问我一个问题。）",
         "gptCorrectionPrompt":"如果以下消息的语法完全正确且有意义，请回答1。如果有错误，请回答0并用项目符号列出错误和更正。例如：\n用户：[消息]\n你：\n0\n错误列表：\n\"错误短语\" -> \"更正后的短语\"\n\"错误短语\" -> \"更正后的短语\"",
         "ttsLanguageCode": "cmn-CN",
         "ttsName": "cmn-CN-Wavenet-A"
-    }]
+    }
+    
 }

@@ -19,7 +19,7 @@ export default function SettingsPage({navigation}) {
         <SafeAreaView style={SettingsPageStyleSheet.container}>
             <View style={SettingsPageStyleSheet.titleContainer}>
                 <Text style={SettingsPageStyleSheet.title}>
-                    Settings
+                    {global.settingsTitle}
                 </Text>
             </View>
             <ScrollView style={SettingsPageStyleSheet.langugeSelector}>
@@ -62,7 +62,7 @@ export default function SettingsPage({navigation}) {
             </ScrollView>
             {/* <View style={SettingsPageStyleSheet.exitButtonContainer}>
                 <TouchableOpacity style={SettingsPageStyleSheet.exitButton} onPress={()=>{navigation.navigate('ConvoPage')}}>
-                    <Text style={SettingsPageStyleSheet.exitButtonText}>Exit</Text>
+                    <Text style={SettingsPageStyleSheet.exitButtonText}>{global.appText.settingsClose}</Text>
                 </TouchableOpacity>
             </View> */}
         </SafeAreaView>

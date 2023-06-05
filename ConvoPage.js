@@ -12,6 +12,7 @@ import { blockStyles } from './components/blockStyles';
 import { textToSpeech } from './api/TextToSpeech';
 import { ConvoPageStyleSheet } from './ConvoPageStyleSheet.js'
 import './prompts/generalizedPrompts.json'
+import './prompts/appText.json'
  
 export default function ConvoPage({navigation}) {
     const hideAIResponse = true;
@@ -31,12 +32,27 @@ export default function ConvoPage({navigation}) {
     //console.log(global.language)
     //console.log(global.language === "English")
     prompts = require('./prompts/generalizedPrompts.json')
-    if(global.language === "Spanish")
-        promptsLanguage = prompts.Spanish
-    else if(global.language === "French")
-        promptsLanguage = prompts.French
-    else if(global.language === "English")
-        promptsLanguage = prompts.English
+
+    switch (global.language) {
+        case "Spanish":
+            promptsLanguage = prompts.spanish
+            break;
+        case "French":
+            promptsLanguage = prompts.french
+            break;
+        default:
+            promptsLanguage = prompts.English
+            break;
+    }
+
+    appLanguages = require('./prompts/appText.json')
+    switch (global.appLanguage) {
+        case "English":
+        default:
+            global.appText = appLanguages.english
+    }
+    
+    
     //console.log(promptsLanguage[0]["ttsName"])
     //console.log(promptsLanguage['ttsName'])
     //console.log("Reinstructing", promptsLanguage[0]["systemInstruction"])
@@ -44,7 +60,7 @@ export default function ConvoPage({navigation}) {
         system:
         {
             role: "system",
-            content: promptsLanguage[0]["systemInstruction"]
+            content: promptsLanguage.systemInstruction
         },
         chatHistory: [],
         latest: {},
@@ -90,6 +106,8 @@ export default function ConvoPage({navigation}) {
     }
 
     async function getGPTResponse(promptInput) {
+        console.log("input gpt")
+        console.log(messageHistory)
         const response = await generateConvoResponse({prompt: promptInput, messages: messageHistory}, promptsLanguage)
 
         const data = await response;
@@ -120,9 +138,9 @@ export default function ConvoPage({navigation}) {
 
     
 
-    async function onSendRecording(event) {
+    async function onSendRecording(event, isRetry = false) {
         event.preventDefault()
-        
+
         try {
             setSendingStatus(true);
             if (recording) {
@@ -164,8 +182,19 @@ export default function ConvoPage({navigation}) {
             console.log(correction.correction)
             correctionList.current[userBlockId] = correction.correction
         } catch (error) {
-			console.error(error);
-      		alert(error.message);
+            if (!isRetry) {
+                try {
+                    console.log("Retrying...")
+                    onSendRecording(event, true)
+                } catch {
+                    console.error(error);
+                    alert(error.message);
+                }
+            } else {
+                console.error(error);
+                alert(error.message);
+            }
+
 		}
 		
 
@@ -209,7 +238,7 @@ export default function ConvoPage({navigation}) {
                     style={[blockStyles.conversationBlock, ConvoPageStyleSheet.userInput]}>
                     <View style={blockStyles.authorContainer}>
                         <View style={[blockStyles.userIcon, , {backgroundColor: color}]}></View>
-                        <Text style={blockStyles.conversationAuthor}>You</Text>
+                        <Text style={blockStyles.conversationAuthor}>{global.appText.userTitle}</Text>
                     </View>
                     <Text style={blockStyles.conversationText}>{text}</Text>
                 </TouchableOpacity>
@@ -221,7 +250,7 @@ export default function ConvoPage({navigation}) {
                     style={[blockStyles.conversationBlock, ConvoPageStyleSheet.userInput]}>
                     <View style={blockStyles.authorContainer}>
                         <View style={[blockStyles.userIcon, , {backgroundColor: color}]}></View>
-                        <Text style={blockStyles.conversationAuthor}>You</Text>
+                        <Text style={blockStyles.conversationAuthor}>{global.appText.userTitle}</Text>
                     </View>
                     <Text style={blockStyles.conversationText}>{text}</Text>
                 </View>
@@ -271,10 +300,10 @@ export default function ConvoPage({navigation}) {
 
 		<Modal visible={modalVisible} style={ConvoPageStyleSheet.modal}>
 				<View style={ConvoPageStyleSheet.correctionPopup}>
-					<Text style={ConvoPageStyleSheet.correctionTitle}>Corrección de mensaje</Text>
+					<Text style={ConvoPageStyleSheet.correctionTitle}>{global.appText.correctionsTitle}</Text>
 					<Text style={ConvoPageStyleSheet.correctionBody}>{messageCorrection}</Text>
 					<Pressable style={ConvoPageStyleSheet.modalButton} onPress={() => setModalVisible(false)}>
-						<Text>Close</Text>
+						<Text>{global.appText.settingsClose}</Text>
 					</Pressable>
 				</View>
 		</Modal>
@@ -283,7 +312,7 @@ export default function ConvoPage({navigation}) {
             <TouchableOpacity style={ConvoPageStyleSheet.settingsButtonContainer} onPress={()=>{navigation.navigate('SettingsPage')}}>
 				<Image source={require('./assets/settings.png')}  style={ConvoPageStyleSheet.settingsButton} />
 			</TouchableOpacity>
-			<Text style={ConvoPageStyleSheet.title}>Convo</Text>
+			<Text style={ConvoPageStyleSheet.title}>{global.appText.appTitle}</Text>
 		</View>
 
 
