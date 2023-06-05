@@ -59,8 +59,8 @@ async function whisperFetch(uri, prompts) {
 	});
 
 	formData.append("model", "whisper-1");
-	console.log(prompts[0]["whisperLanguage"])
-	formData.append("language", prompts[0]["whisperLanguage"])
+	console.log(prompts.whisperLanguage)
+	formData.append("language", prompts.whisperLanguage)
 
 	result = await fetch(url, {
 		method: 'POST',

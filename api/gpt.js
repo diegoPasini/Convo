@@ -28,7 +28,8 @@ export const generateConvoResponse = async (req, prompts) =>  {
 	}
 
 	try {
-		console.log("Messages", messages )
+		console.log("Messages", messages)
+		console.log(req)
 		console.log("Prompt", prompt )
 		updateMessageHistory(messages, prompt, prompts)
 		messageHistory = getMessageHistory(messages, prompts)
@@ -67,7 +68,7 @@ export const generateConvoResponse = async (req, prompts) =>  {
 function updateMessageHistory(messages, prompt, prompts) {
 	console.log("length")
 	console.log(messages.chatHistory.length)
-	const trailingMessage = prompts[0]["trailingMessage"]
+	const trailingMessage = prompts.trailingMessage
 
 	if (messages.chatHistory.length > 0) {
 		// remove trailing message at end of previous prompt
@@ -88,7 +89,7 @@ function getMessageHistory(messages, prompts) {
 	if (messages.system != undefined) {
 		console.log("system emssage")
 		// console.log( prompts[0]["systemInstruction"])
-		systemMessage = {"role": "system", "content": prompts[0]["systemInstruction"]}
+		systemMessage = {"role": "system", "content": prompts.systemInstruction}
 		console.log(systemMessage)
 		// console.log(systemMessage.content)
 		return [systemMessage, ...messages.chatHistory]

@@ -1,28 +1,28 @@
 {
-    "Spanish":[{
+    "spanish":{
         "systemInstruction": "Vas a hablar SOLO en español con el user y continuar la conversación. Responde en 15 palabras o menos",     
         "whisperLanguage": "es",
         "trailingMessage": " (Responde en menos de 35 palabras y hazme una pregunta)",
         "gptCorrectionPrompt": "Responde con 1 si el siguiente mensaje tiene gramática totalmente correctas y tiene sentido. Si tiene alguno error, responde con 0 y explica por qué con una lista con viñetas. \n Example: \n User: [Mensaje] \n Tu: \n 0 \n Listo de errores: \n - \"frase incorrecta\" -> \"frase corregida\"  \n - \"frase incorrecta\" -> \"frase corregida\"",
         "ttsLanguageCode": "es-ES",
         "ttsName": "es-ES-Wavenet-D"
-    }],
+    },
 
-    "French":[{
+    "french":{
         "systemInstruction": "Tu vas parler SEULEMENT en français avec l'utilisateur et poursuivre la conversation. Réponds en 15 mots ou moins.",
         "whisperLanguage":"fr",
         "trailingMessage": " (Répondez en moins de 35 mots et posez-moi une question.)",
         "gptCorrectionPrompt":"Réponds avec 1 si le message suivant a une grammaire totalement correcte et a du sens. Si il y a des erreurs, réponds avec 0 et explique pourquoi avec une liste à puces. \n Exemple:\n Utilisateur: [Message] \n Toi: \n 0 \n Liste d'erreurs: \n \"Phrase incorrecte\" -> \"Phrase corrigée\" \n \"Phrase incorrecte\" -> \"Phrase corrigée\"",
         "ttsLanguageCode": "fr-FR",
         "ttsName": "fr-FR-Wavenet-A"
-    }],
+    },
 
-    "English":[{
+    "English":{
         "systemInstruction": "You will speak ONLY in English with the user and continue the conversation. Respond in 15 words or less.",
         "whisperLanguage":"en",
         "trailingMessage": " (Respond in fewer than 35 words and ask me a question.)",
         "gptCorrectionPrompt":"Respond with 1 if the following message has completely correct grammar and makes sense. If there are errors, respond with 0 and explain why with a bulleted list. \n Example: \n User: [Message] \n You: \n 0 \n Error list: \n - \"Incorrect phrase\" -> \"Corrected phrase\" \n - \"Incorrect phrase\" -> \"Corrected phrase\"",
         "ttsLanguageCode": "en-GB",
         "ttsName": "en-GB-News-G"
-    }]
+    }
 }

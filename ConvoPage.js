@@ -32,9 +32,9 @@ export default function ConvoPage({navigation}) {
     //console.log(global.language === "English")
     prompts = require('./prompts/generalizedPrompts.json')
     if(global.language === "Spanish")
-        promptsLanguage = prompts.Spanish
+        promptsLanguage = prompts.spanish
     else if(global.language === "French")
-        promptsLanguage = prompts.French
+        promptsLanguage = prompts.french
     else if(global.language === "English")
         promptsLanguage = prompts.English
     //console.log(promptsLanguage[0]["ttsName"])
@@ -44,7 +44,7 @@ export default function ConvoPage({navigation}) {
         system:
         {
             role: "system",
-            content: promptsLanguage[0]["systemInstruction"]
+            content: promptsLanguage.systemInstruction
         },
         chatHistory: [],
         latest: {},
@@ -90,6 +90,8 @@ export default function ConvoPage({navigation}) {
     }
 
     async function getGPTResponse(promptInput) {
+        console.log("input gpt")
+        console.log(messageHistory)
         const response = await generateConvoResponse({prompt: promptInput, messages: messageHistory}, promptsLanguage)
 
         const data = await response;
@@ -122,7 +124,7 @@ export default function ConvoPage({navigation}) {
 
     async function onSendRecording(event) {
         event.preventDefault()
-        
+
         try {
             setSendingStatus(true);
             if (recording) {
