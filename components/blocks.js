@@ -35,7 +35,7 @@ export class AiBlock extends Component {
                 <View style={aiStyles.aiResponse}>
                     <View style={blockStyles.conversationBlock}>
                     <View style={blockStyles.authorContainer}>
-                        <View style={[blockStyles.userIcon, {backgroundColor: "blue"}]}></View>
+                        <View style={[blockStyles.userIcon, {backgroundColor: "#5b84f5"}]}></View>
                         <Text style={blockStyles.conversationAuthor}>Convo</Text>
                     </View>
                     <Text style={[blockStyles.conversationText, aiStyles.noStyle]}>{this.text}</Text>
