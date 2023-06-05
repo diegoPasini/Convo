@@ -21,7 +21,7 @@ export const SettingsPageStyleSheet = StyleSheet.create({
     },
 
     title:{
-        fontSize:50,
+        fontSize:40,
         textAlign: 'center',
     },
 
@@ -30,7 +30,7 @@ export const SettingsPageStyleSheet = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'space-evenly',
         alignItems: 'center',
-        
+        height:"70%",
         // position: 'absolute',
         // top: 20,
         // left: 20,
@@ -40,24 +40,26 @@ export const SettingsPageStyleSheet = StyleSheet.create({
         flexDirection: 'row',
         borderColor: "black",
 	    borderRadius: 30,
-        borderWidth: 3,
+        borderWidth: 2,
         marginTop: 20,
-        height: 100,
+        height: 60,
         width: 325,
         //color:'#f2f2f2',
         marginLeft: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     
     flag:{
 	    resizeMode: "contain",
+        width: 50,
         marginTop: -5,
     },
 
     languageSelectionText:{
-        marginLeft: 25,
-        marginTop: 23,
-        fontSize: 30,
+        fontSize: 25,
         color: 'black',
+        
     },
 
     overlay:{
