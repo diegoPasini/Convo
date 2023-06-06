@@ -325,6 +325,7 @@ export default function ConvoPage({navigation}) {
     const onUserBlockPressed = (key, correctness) => {
         console.log("Block pressed")
         originalMessage = correctionList.current[key].message
+        count = 0;
         if (correctness == "incorrect") {
             console.log("Message", correctionList.current[key].message)
             const pattern = /- "([^"]*)"/g;
@@ -332,6 +333,7 @@ export default function ConvoPage({navigation}) {
             console.log("Matches, ", matches)
             console.log("original message", originalMessage)
             const newList = [];
+            
             if (matches) {
                 const extractedText = matches.map(match => match.replace(/- "|"/g, ''));
                 console.log("Extracted Text,", extractedText);
@@ -342,14 +344,14 @@ export default function ConvoPage({navigation}) {
                     const str = extractedText[i]
                     index = originalMessage.indexOf(str)
                     
-                    const beforeString = <Text style={{color:'black'}}>{originalMessage.substring(0, index)}</Text>
+                    const beforeString = <Text style={{color:'black'}} key={count++}>{originalMessage.substring(0, index)}</Text>
                     newList.push(beforeString)
-                    newList.push(<Text style={{color:'red'}}>{originalMessage.substring(index, index + str.length)}</Text>)
+                    newList.push(<Text style={{color:'red'}} key={count++}>{originalMessage.substring(index, index + str.length)}</Text>)
                     originalMessage = originalMessage.substring(index+str.length)
                 }   
                 
             }  
-            newList.push( <Text style={{color:'black'}}>{originalMessage}</Text>)          
+            newList.push( <Text style={{color:'black'}} key={count++}>{originalMessage}</Text>)          
             console.log("Fragmented Sentence")
             console.log(originalMessage)
             setParsedMessage(newList)
