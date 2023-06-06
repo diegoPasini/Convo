@@ -10,18 +10,51 @@ export const SettingsPageStyleSheet = StyleSheet.create({
 		flexDirection:"column",
 		margin:0,
 		padding:0,
+        
+
   	},
 
     titleContainer:{
                 // position: 'absolute',
         // top: 20,
         // left: 20,
-        paddingTop: 40,
-        
+        paddingTop: 25,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+    },
+
+    backIcon:{
+        position: 'absolute',
+        left: 10,
+        resizeMode: "contain",
+        width: 50,
+        top:10, 
+        paddingVertical: 30,
+        paddingHorizontal: 20,
     },
 
     title:{
         fontSize:40,
+        textAlign: 'center',
+        fontFamily: "NotoSans",
+    },
+
+    descriptionContainer:{
+        // position: 'absolute',
+        // top: 20,
+        // left: 20,
+        //paddingTop: 25,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+        width: "90%",
+        marginLeft: 20,
+    },
+    
+    descriptionText:{
+        fontSize: 16,
+        fontFamily: "NotoSans",
         textAlign: 'center',
     },
 
@@ -42,29 +75,35 @@ export const SettingsPageStyleSheet = StyleSheet.create({
 	    borderRadius: 30,
         borderWidth: 2,
         marginTop: 20,
-        height: 60,
+        height: 50,
         width: 325,
         //color:'#f2f2f2',
         marginLeft: 20,
         justifyContent: 'center',
         alignItems: 'center',
+        
     },
     
+
     flag:{
+        position: 'absolute',
 	    resizeMode: "contain",
         width: 50,
-        marginTop: -5,
+        left: 20,
+        alignContent: 'flex-start',
     },
 
     languageSelectionText:{
         fontSize: 25,
         color: 'black',
+        textAlign: 'center',
+        fontFamily: "NotoSans",
         
     },
 
     overlay:{
         ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(0, 0, 255, 0.25)',
+        backgroundColor: 'rgba(0, 0, 255, 0.2)',
         borderRadius: 24,
         
     },

@@ -19,7 +19,7 @@
     "expo-file-system": "~15.2.2",
     "expo-font": "^11.1.1",
     "expo-speech": "~11.1.1",
-    "expo-splash-screen": "~0.18.2",
+    "expo-splash-screen": "^0.18.2",
     "expo-status-bar": "~1.4.4",
     "fs": "^0.0.1-security",
     "openai": "^3.2.1",

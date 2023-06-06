@@ -40,12 +40,19 @@ export const ConvoPageStyleSheet = StyleSheet.create({
 	correctionTitle: {
 		fontSize:20,
 		marginVertical:20,
+		fontFamily: "NotoSans",
 	},
 	
+	originalMessage:{
+		fontSize: 20,
+		fontFamily: "NotoSans",
+	},
+
 	correctionBody: {
 		minHeight:50,
 		alignItems: 'center',
 		justifyContent: "center",
+		fontFamily: "NotoSans",
 	},
 
 	modalButton: {
@@ -85,6 +92,7 @@ export const ConvoPageStyleSheet = StyleSheet.create({
 
 	title: {
 		fontSize:40,
+		fontFamily: "NotoSans",
 		// alignSelf: 'center',
 		// marginRight: 80
 	},

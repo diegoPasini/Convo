@@ -1,6 +1,6 @@
 
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { ConvoPageStyleSheetheet, Text, View, TextInput, Button, TouchableOpacity, Image, ScrollView, Dimensions, SafeAreaView, Pressable } from 'react-native';
 import { generateConvoResponse, generateMessageCorrection } from './api/gpt';
 import transcribeAudio from './api/whisper';
@@ -13,7 +13,11 @@ import { textToSpeech } from './api/TextToSpeech';
 import { ConvoPageStyleSheet } from './ConvoPageStyleSheet.js'
 import './prompts/generalizedPrompts.json'
 import './prompts/appText.json'
- 
+import { useFonts } from 'expo-font'
+import * as SplashScreen from 'expo-splash-screen';
+
+SplashScreen.preventAutoHideAsync();
+
 export default function ConvoPage({navigation}) {
     const hideAIResponse = true;
     const [recording, setRecording] = useState();
@@ -26,6 +30,7 @@ export default function ConvoPage({navigation}) {
     const blockList = useRef([])
     const [modalVisible, setModalVisible] = useState(false);
     const [messageCorrection, setMessageCorrection] = useState("")
+    const [originalMessage, setMessage] = useState("")
     
     //console.log(prompts.Spanish);
     //const promptsLanguage ={};\
@@ -40,8 +45,23 @@ export default function ConvoPage({navigation}) {
         case "French":
             promptsLanguage = prompts.french
             break;
+        case "English":
+            promptsLanguage = prompts.english
+            break;
+        case "Mandarin":
+            promptsLanguage = prompts.mandarin
+            break;
+        case "Hebrew":
+            promptsLanguage = prompts.hebrew
+            break;
+        case "Korean":
+            promptsLanguage = prompts.korean
+            break;
+        case "Russian":
+            promptsLanguage = prompts.russian
+            break;
         default:
-            promptsLanguage = prompts.English
+            promptsLanguage = prompts.Spanish
             break;
     }
 
@@ -66,9 +86,25 @@ export default function ConvoPage({navigation}) {
         latest: {},
     })
     
-
+    
     const scrollViewRef = useRef();
     const correctionList = useRef({})
+
+    const [fontsLoaded] = useFonts({
+        'NotoSans': require('./assets/fonts/NotoSans-Regular.ttf'),
+        'NotoSansBold': require('./assets/fonts/NotoSans-Regular.ttf'),
+      });
+    
+      const onLayoutRootView = useCallback(async () => {
+        if (fontsLoaded) {
+          await SplashScreen.hideAsync();
+        }
+      }, [fontsLoaded]);
+    
+      if (!fontsLoaded) {
+        return null;
+      }
+
 
     async function startRecording() {
         // Speech.stop()
@@ -180,7 +216,7 @@ export default function ConvoPage({navigation}) {
             setBlocks(blockList.current)
             console.log("correction")
             console.log(correction.correction)
-            correctionList.current[userBlockId] = correction.correction
+            correctionList.current[userBlockId] = {correction: correction.correction, message: audioTranscript}
         } catch (error) {
             if (!isRetry) {
                 try {
@@ -238,9 +274,9 @@ export default function ConvoPage({navigation}) {
                     style={[blockStyles.conversationBlock, ConvoPageStyleSheet.userInput]}>
                     <View style={blockStyles.authorContainer}>
                         <View style={[blockStyles.userIcon, , {backgroundColor: color}]}></View>
-                        <Text style={blockStyles.conversationAuthor}>{global.appText.userTitle}</Text>
+                        <Text style={[blockStyles.conversationAuthor, {fontFamily: "NotoSans",}]}>{global.appText.userTitle}</Text>
                     </View>
-                    <Text style={blockStyles.conversationText}>{text}</Text>
+                    <Text style={[blockStyles.conversationText, {fontFamily: "NotoSans",}]}>{text}</Text>
                 </TouchableOpacity>
             )
         } else {
@@ -250,9 +286,9 @@ export default function ConvoPage({navigation}) {
                     style={[blockStyles.conversationBlock, ConvoPageStyleSheet.userInput]}>
                     <View style={blockStyles.authorContainer}>
                         <View style={[blockStyles.userIcon, , {backgroundColor: color}]}></View>
-                        <Text style={blockStyles.conversationAuthor}>{global.appText.userTitle}</Text>
+                        <Text style={[blockStyles.conversationAuthor, {fontFamily: "NotoSans",}]}>{global.appText.userTitle}</Text>
                     </View>
-                    <Text style={blockStyles.conversationText}>{text}</Text>
+                    <Text style={[blockStyles.conversationText, {fontFamily: "NotoSans",}]}>{text}</Text>
                 </View>
             )
         }
@@ -270,7 +306,8 @@ export default function ConvoPage({navigation}) {
     const onUserBlockPressed = (key, correctness) => {
         console.log("Block pressed")
         if (correctness == "incorrect") {
-            setMessageCorrection(correctionList.current[key])
+            setMessage(correctionList.current[key].message)
+            setMessageCorrection(correctionList.current[key].correction)
             setModalVisible(true)
         }
     }
@@ -296,11 +333,12 @@ export default function ConvoPage({navigation}) {
 
     return (
 	
-    <SafeAreaView style={ConvoPageStyleSheet.container}>
+    <SafeAreaView style={ConvoPageStyleSheet.container} onLayout={onLayoutRootView}>
 
 		<Modal visible={modalVisible} style={ConvoPageStyleSheet.modal}>
 				<View style={ConvoPageStyleSheet.correctionPopup}>
 					<Text style={ConvoPageStyleSheet.correctionTitle}>{global.appText.correctionsTitle}</Text>
+                    <Text style={ConvoPageStyleSheet.originalMessage}>{originalMessage}</Text>
 					<Text style={ConvoPageStyleSheet.correctionBody}>{messageCorrection}</Text>
 					<Pressable style={ConvoPageStyleSheet.modalButton} onPress={() => setModalVisible(false)}>
 						<Text>{global.appText.settingsClose}</Text>

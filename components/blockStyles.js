@@ -18,8 +18,8 @@ export const blockStyles = StyleSheet.create({
   conversationText: {
 	color:"black",
 	fontSize:17,
-	marginTop:10,
-	marginBottom:5,
+	marginTop:3,
+	marginBottom:3,
   },
 
   authorContainer:{
