@@ -98,7 +98,7 @@ function getMessageHistory(messages, prompts) {
 		return messages.chatHistory
 }
 
-export const generateMessageCorrection = async (message) => {
+export const generateMessageCorrection = async (message, prompts) => {
 
 	if (message.length == 0) {
 		console.warn("Invalid message for correction")
@@ -109,7 +109,7 @@ export const generateMessageCorrection = async (message) => {
 
 	// response = await getAdaResponse(message)
 
-	response = await getGPTTurboResponse(message)
+	response = await getGPTTurboResponse(message, prompts)
 	// result2 = completion.data.choices[1].message.content
 	// response2 = extractResponse(result2)
 	
@@ -163,37 +163,8 @@ function extractResponse(result) {
 	return {"isCorrect": is_correct, "correction": correction}
 }
 
-async function getGPTTurboResponse(message) {
-	const prompt = `If the message has no grammar mistakes, respond 1. If not, respond 0 and correct each mistake. Spelling, accent, and punctuation errors do not count.
-
-Examples:
-User: "Anoche yo fue a la fiesta con mis amigos. Estábamos bailando y cantamos mucho. Cuando la música empezó, yo saltar y grité de emoción. Espero que tú va a venir a la próxima fiesta también."
-Tu:
-0
-Listo de errores:
-- "Anoche yo fue" -> "Anoche yo fui" (preterite tense)
-- "cantamos mucho" -> "cantamos mucho" (correct)
-- "yo saltar y grité" -> "yo salté y grité" (preterite tense)
-- "Espero que tú va" -> "Espero que tú vengas" (subjunctive present tense)
-
-User: Como fue tu dia?
-Tu:
-1
-
-User: "Ayer yo vio una película en el cine. La película era muy interesante y yo gusta mucho. Si yo tuviera más tiempo, yo va a verla otra vez. Ojalá que el próximo fin de semana yo vaya al cine con mis amigos."
-
-Tu:
-0
-Listo de errores:
-- "yo vio" -> "yo vi"
-- "yo gusta mucho" -> "me gustó mucho" (preterite tense)
-- "yo va a verla" -> "la volvería a ver" (conditional tense)
-- "Ojalá que" -> "Ojalá" (subjunctive mood)
-- "yo vaya" -> "vaya yo" (subjunctive mood) 
-
-User: "${message}"
-
-Tu:`
+async function getGPTTurboResponse(message, prompts) {
+	const prompt = prompts.gptCorrectionPrompt+ `\nUser: ${message}"Tu:`
 
 	const completion = await openai.createChatCompletion({
 		model: "gpt-3.5-turbo",

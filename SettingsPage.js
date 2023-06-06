@@ -74,7 +74,12 @@ export default function SettingsPage({navigation}) {
                         <Text style={SettingsPageStyleSheet.languageSelectionText}>{global.appText.mandarinText}</Text>
                         {(global.language === 'Mandarin') && <View style={SettingsPageStyleSheet.overlay}/>}
                     </TouchableOpacity>
-                    <TouchableOpacity style={SettingsPageStyleSheet.languageButton} onPress={()=>{setLanguage("Hebrew")}}>
+                    <TouchableOpacity style={SettingsPageStyleSheet.languageButton} onPress={()=>{setLanguage("Hindi")}}>
+                    <Image source={require('./assets/IndianFlag.png')}  style={SettingsPageStyleSheet.flag} />
+                    <Text style={SettingsPageStyleSheet.languageSelectionText}>{global.appText.hindiText}</Text>
+                    {(global.language === 'Hindi') && <View style={SettingsPageStyleSheet.overlay}/>}
+                </TouchableOpacity>
+                <TouchableOpacity style={SettingsPageStyleSheet.languageButton} onPress={()=>{setLanguage("Hebrew")}}>
                         <Image source={require('./assets/IsraeliFlag.png')}  style={SettingsPageStyleSheet.flag} />
                         <Text style={SettingsPageStyleSheet.languageSelectionText}>{global.appText.hebrewText}</Text>
                         {(global.language === 'Hebrew') && <View style={SettingsPageStyleSheet.overlay}/>}
@@ -89,7 +94,12 @@ export default function SettingsPage({navigation}) {
                         <Text style={SettingsPageStyleSheet.languageSelectionText}>{global.appText.russianText}</Text>
                         {(global.language === 'Russian') && <View style={SettingsPageStyleSheet.overlay}/>}
                     </TouchableOpacity>
-                </ScrollView>
+                    <TouchableOpacity style={SettingsPageStyleSheet.languageButton} onPress={()=>{setLanguage("Japanese")}}>
+                    <Image source={require('./assets/JapaneseFlag.png')}  style={SettingsPageStyleSheet.flag} />
+                    <Text style={SettingsPageStyleSheet.languageSelectionText}>{global.appText.japaneseText}</Text>
+                    {(global.language === 'Japanese') && <View style={SettingsPageStyleSheet.overlay}/>}
+                </TouchableOpacity>
+            </ScrollView>
             </View>
             {/* <View style={SettingsPageStyleSheet.exitButtonContainer}>
                 <TouchableOpacity style={SettingsPageStyleSheet.exitButton} onPress={()=>{navigation.navigate('ConvoPage')}}>
