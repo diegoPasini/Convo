@@ -12,6 +12,8 @@
         "koreanText": "한국어",
         "russianText": "русский язык",
         "englishText": "English",
-        "hebrewText": "עִבְרִית"
+        "hebrewText": "עִבְרִית",
+        "hindiText": "हिंदी",
+        "japaneseText": "日本"
     }
 }

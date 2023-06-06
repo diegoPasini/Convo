@@ -88,6 +88,7 @@ export const ConvoPageStyleSheet = StyleSheet.create({
 
   userInput: {
 	//backgroundColor: "#daf3ff"
+
   },
 
   bottomBar: {
@@ -146,12 +147,19 @@ export const ConvoPageStyleSheet = StyleSheet.create({
 correctionTitle: {
 	fontSize:20,
 	marginVertical:20,
+	fontFamily: "NotoSans",
+},
+
+originalMessage:{
+	fontSize: 18,
+	fontFamily: "NotoSans",
 },
 
 correctionBody: {
 	minHeight:50,
 	alignItems: 'center',
 	justifyContent: "center",
+	fontFamily: "NotoSans",
 },
 
 modalButton: {

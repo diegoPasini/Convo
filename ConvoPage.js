@@ -16,6 +16,7 @@ import './prompts/appText.json'
 import { useFonts } from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen';
 
+
 SplashScreen.preventAutoHideAsync();
 
 export default function ConvoPage({navigation}) {
@@ -30,8 +31,8 @@ export default function ConvoPage({navigation}) {
     const blockList = useRef([])
     const [modalVisible, setModalVisible] = useState(false);
     const [messageCorrection, setMessageCorrection] = useState("")
-    const [originalMessage, setMessage] = useState("")
-    
+    const [firstInSentence, setFirstCorrectionInSentence] = useState(false)
+    const [parsedMessage, setParsedMessage] = useState("")
     //console.log(prompts.Spanish);
     //const promptsLanguage ={};\
     //console.log(global.language)
@@ -60,8 +61,14 @@ export default function ConvoPage({navigation}) {
         case "Russian":
             promptsLanguage = prompts.russian
             break;
+        case "Hindi":
+            promptsLanguage = prompts.hindi
+            break;
+        case "Japanese":
+            promptsLanguage = prompts.japanese
+            break;
         default:
-            promptsLanguage = prompts.Spanish
+            promptsLanguage = prompts.spanish
             break;
     }
 
@@ -305,8 +312,36 @@ export default function ConvoPage({navigation}) {
 
     const onUserBlockPressed = (key, correctness) => {
         console.log("Block pressed")
+        originalMessage = correctionList.current[key].message
         if (correctness == "incorrect") {
-            setMessage(correctionList.current[key].message)
+            console.log("Message", correctionList.current[key].message)
+            const pattern = /- "([^"]*)"/g;
+            const matches = correctionList.current[key].correction.match(pattern);
+            console.log("Matches, ", matches)
+            console.log("original message", originalMessage)
+            const newList = [];
+            if (matches) {
+                const extractedText = matches.map(match => match.replace(/- "|"/g, ''));
+                console.log("Extracted Text,", extractedText);
+                setFirstCorrectionInSentence(false)
+                console.log("Extracted Text Length,", extractedText.length)
+                console.log("original message", originalMessage)
+                for(let i = 0; i < extractedText.length; i++){
+                    const str = extractedText[i]
+                    index = originalMessage.indexOf(str)
+                    
+                    const beforeString = <Text style={{color:'black'}}>{originalMessage.substring(0, index)}</Text>
+                    newList.push(beforeString)
+                    newList.push(<Text style={{color:'red'}}>{originalMessage.substring(index, index + str.length)}</Text>)
+                    originalMessage = originalMessage.substring(index+str.length)
+                }   
+                
+            }  
+            newList.push( <Text style={{color:'black'}}>{originalMessage}</Text>)          
+            console.log("Fragmented Sentence")
+            console.log(originalMessage)
+            setParsedMessage(newList)
+            
             setMessageCorrection(correctionList.current[key].correction)
             setModalVisible(true)
         }
@@ -338,7 +373,7 @@ export default function ConvoPage({navigation}) {
 		<Modal visible={modalVisible} style={ConvoPageStyleSheet.modal}>
 				<View style={ConvoPageStyleSheet.correctionPopup}>
 					<Text style={ConvoPageStyleSheet.correctionTitle}>{global.appText.correctionsTitle}</Text>
-                    <Text style={ConvoPageStyleSheet.originalMessage}>{originalMessage}</Text>
+                    <Text style={ConvoPageStyleSheet.originalMessage}>{parsedMessage}</Text>
 					<Text style={ConvoPageStyleSheet.correctionBody}>{messageCorrection}</Text>
 					<Pressable style={ConvoPageStyleSheet.modalButton} onPress={() => setModalVisible(false)}>
 						<Text>{global.appText.settingsClose}</Text>
