@@ -138,6 +138,9 @@ export default function ConvoPage({navigation}) {
     }
 
     async function stopRecording(cancelled = false) {
+        if (recording == undefined) {
+            return null;
+        }
         console.log('Stopping recording..');
         setRecording(undefined);
         setRecordingState("recorded")
@@ -231,18 +234,20 @@ export default function ConvoPage({navigation}) {
             console.log(correction.correction)
             correctionList.current[userBlockId] = {correction: correction.correction, message: audioTranscript}
         } catch (error) {
-            if (!isRetry) {
-                try {
-                    console.log("Retrying...")
-                    sendRecording(true)
-                } catch {
-                    console.error(error);
-                    alert(error.message);
-                }
-            } else {
-                console.error(error);
-                alert(error.message);
-            }
+            // if (!isRetry) {
+            //     try {
+            //         console.log("Retrying...")
+            //         sendRecording(true)
+            //     } catch {
+            //         console.error(error);
+            //         alert(error.message);
+            //     }
+            // } else {
+            //     console.error(error);
+            //     alert(error.message);
+            // }
+            console.error(error);
+            // alert(error.message);
 
 		}
 		
@@ -410,7 +415,7 @@ export default function ConvoPage({navigation}) {
 		
 
 		<View style={ConvoPageStyleSheet.bottomBar}>
-            {recordingState == "recording" ? (<TouchableOpacity style={[ConvoPageStyleSheet.iconButton, ConvoPageStyleSheet.cancelButtonContainer]} onPress={() => stopRecording(true)}>
+            {recording ? (<TouchableOpacity style={[ConvoPageStyleSheet.iconButton, ConvoPageStyleSheet.cancelButtonContainer]} onPress={() => stopRecording(true)}>
 				<Image source={require('./assets/icons/x_icon.png')}  style={[ConvoPageStyleSheet.img, ConvoPageStyleSheet.cancelButtonImg]} />
 			</TouchableOpacity>) : null
             }
