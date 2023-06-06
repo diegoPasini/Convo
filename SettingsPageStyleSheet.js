@@ -77,7 +77,7 @@ export const SettingsPageStyleSheet = StyleSheet.create({
         flexDirection: 'row',
         width: "90%",
         marginLeft: 20,
-        height:"15%"
+        height:"15%",
     },
     
     descriptionText:{
@@ -89,6 +89,9 @@ export const SettingsPageStyleSheet = StyleSheet.create({
     languageSelectorContainer: {
         width:"100%",
         height:"75%",
+        borderColor: "gray",
+		borderTopWidth: 2,
+        borderBottomWidth:2,
         // borderColor: "blue",
 		// borderWidth: 1,
         
