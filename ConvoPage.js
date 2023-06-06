@@ -31,6 +31,9 @@ export default function ConvoPage({navigation}) {
     const [modalVisible, setModalVisible] = useState(false);
     const [messageCorrection, setMessageCorrection] = useState("")
     const [originalMessage, setMessage] = useState("")
+    const micIcon = require('./assets/icons/mic.png')
+    const arrowIcon = require('./assets/icons/arrow.png')
+    const [centerButtonImg, setCenterButtonImg] = useState(micIcon)
     
     //console.log(prompts.Spanish);
     //const promptsLanguage ={};\
@@ -127,10 +130,14 @@ export default function ConvoPage({navigation}) {
         }
     }
 
-    async function stopRecording() {
+    async function stopRecording(cancelled = false) {
         console.log('Stopping recording..');
         setRecording(undefined);
         setRecordingState("recorded")
+        if (cancelled) {
+            setCenterButtonImg(micIcon)
+            setRecordingState("none")
+        }
         await recording.stopAndUnloadAsync();
         await Audio.setAudioModeAsync({
             allowsRecordingIOS: false,
@@ -174,9 +181,7 @@ export default function ConvoPage({navigation}) {
 
     
 
-    async function onSendRecording(event, isRetry = false) {
-        event.preventDefault()
-
+    async function sendRecording(isRetry = false) {
         try {
             setSendingStatus(true);
             if (recording) {
@@ -202,6 +207,7 @@ export default function ConvoPage({navigation}) {
             // setLatestUri(undefined) // remove previous recording
             setRecordingState("none")
             setSendingStatus(false)
+            setCenterButtonImg(micIcon)
 
             correction = await generateMessageCorrection(audioTranscript, promptsLanguage)
             correctedUserBlock = await getCorrectedUserBlock(audioTranscript, correction.isCorrect, userBlockId)
@@ -221,7 +227,7 @@ export default function ConvoPage({navigation}) {
             if (!isRetry) {
                 try {
                     console.log("Retrying...")
-                    onSendRecording(event, true)
+                    sendRecording(true)
                 } catch {
                     console.error(error);
                     alert(error.message);
@@ -240,8 +246,9 @@ export default function ConvoPage({navigation}) {
     async function onRecordPressed(event) {
         if (recording == undefined) {
             startRecording()
+            setCenterButtonImg(arrowIcon)
         } else {
-            stopRecording()
+            sendRecording()
         }
     }
 
@@ -348,7 +355,7 @@ export default function ConvoPage({navigation}) {
 		
 		<View style={ConvoPageStyleSheet.titleContainer}>
             <TouchableOpacity style={ConvoPageStyleSheet.settingsButtonContainer} onPress={()=>{navigation.navigate('SettingsPage')}}>
-				<Image source={require('./assets/settings.png')}  style={ConvoPageStyleSheet.settingsButton} />
+				<Image source={require('./assets/icons/settings.png')}  style={ConvoPageStyleSheet.settingsButton} />
 			</TouchableOpacity>
 			<Text style={ConvoPageStyleSheet.title}>{global.appText.appTitle}</Text>
 		</View>
@@ -368,11 +375,12 @@ export default function ConvoPage({navigation}) {
 		
 
 		<View style={ConvoPageStyleSheet.bottomBar}>
+            {recordingState == "recording" ? (<TouchableOpacity style={[ConvoPageStyleSheet.iconButton, ConvoPageStyleSheet.cancelButtonContainer]} onPress={() => stopRecording(true)}>
+				<Image source={require('./assets/icons/x_icon.png')}  style={[ConvoPageStyleSheet.img, ConvoPageStyleSheet.cancelButtonImg]} />
+			</TouchableOpacity>) : null
+            }
 			<TouchableOpacity style={[ConvoPageStyleSheet.iconButton, ConvoPageStyleSheet.micButton((recordingState))]} onPress={onRecordPressed}>
-				<Image source={require('./assets/mic.png')}  style={ConvoPageStyleSheet.img} />
-			</TouchableOpacity>
-			<TouchableOpacity style={[ConvoPageStyleSheet.iconButton, ConvoPageStyleSheet.sendButton(isSending)]} onPress={onSendRecording}>
-				<Image source={require('./assets/arrow.png')}  style={ConvoPageStyleSheet.img} />
+				<Image source={centerButtonImg}  style={ConvoPageStyleSheet.img} />
 			</TouchableOpacity>
 		</View>
 		

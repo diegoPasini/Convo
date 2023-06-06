@@ -6,7 +6,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const buttonHeight = windowHeight*.1
-const imagePad = windowHeight*.04
+const imagePad = windowHeight*.03
 const buttonSeparation = 0
 // percents should add to 1
 const titleHeight = Math.floor(windowHeight * .1)
@@ -30,7 +30,7 @@ export const ConvoPageStyleSheet = StyleSheet.create({
 
   	titleContainer: {
 		width:"100%",
-		height:"10%",
+		height:titleHeight,
 		justifyContent: "center",
 		alignItems: "center",
 		flexDirection: 'row-reverse',
@@ -45,7 +45,7 @@ export const ConvoPageStyleSheet = StyleSheet.create({
 	settingsButtonContainer:{
 		height: "100%",
 		position: 'absolute',
-		left:10,
+		left:20,
 		alignContent:"center",
 		justifyContent: "center",
 	},
@@ -79,6 +79,7 @@ export const ConvoPageStyleSheet = StyleSheet.create({
 		//paddingBottom:40,
 		//paddingTop:10,
 		overflow: "hidden",
+		
 	},
 
 
@@ -88,13 +89,16 @@ export const ConvoPageStyleSheet = StyleSheet.create({
 
   userInput: {
 	//backgroundColor: "#daf3ff"
+	borderBottomWidth:1,
+	borderTopWidth:1,
+	borderColor: "#d1d1d1"
   },
 
   bottomBar: {
 	width: "100%",
 	alignItems: 'center',
 	flexDirection:"row",
-    justifyContent: "space-evenly",
+    justifyContent: "center",
 	height: buttonBarHeight,
 	// borderColor:"red",
 	// borderWidth:1,
@@ -112,6 +116,7 @@ export const ConvoPageStyleSheet = StyleSheet.create({
 	borderColor: "black",
 	borderWidth: 3,
 	borderRadius: buttonHeight/2,
+	// padding:"2%",
 	// marginBottom:15,
   },
 
@@ -120,6 +125,21 @@ export const ConvoPageStyleSheet = StyleSheet.create({
 	width: buttonHeight-imagePad,
 	height: undefined,
 	resizeMode: "contain"
+  },
+
+  cancelButtonContainer: {
+	height:buttonHeight/2,
+	width:buttonHeight/2,
+	position:"absolute",
+	left:"20%",
+	backgroundColor:"#e06767",
+  },
+
+  cancelButtonImg: {
+	width:20,
+	height: undefined
+	// height:buttonHeight/2,
+	// width:buttonHeight/2,
   },
 
   modal: {
@@ -170,8 +190,8 @@ modalButton: {
 		backgroundColor: getMicColor(recordingState)
 	}),
 
-	sendButton: isSending => ({
-		backgroundColor: isSending ? "#90EE90" : undefined
+	cancelButton: isRecording => ({
+		visi: isRecording ? "#90EE90" : undefined
 	}),
 
 
