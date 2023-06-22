@@ -10,7 +10,6 @@ import { LoginPageStyleSheet } from "./LoginPageStyleSheet";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 
 
-
 SplashScreen.preventAutoHideAsync();
 
 export default function LoginPage({navigation}) {

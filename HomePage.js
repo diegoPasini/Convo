@@ -35,7 +35,6 @@ export default function HomePage({navigation}) {
       }
 
     return (
-	
     <SafeAreaView style={HomePageStyleSheet.container} onLayout={onLayoutRootView}>
         <Text style = {HomePageStyleSheet.title}>Email {email}</Text>
         <View style = {HomePageStyleSheet.buttonContainer}>
