@@ -42,11 +42,12 @@ export default function App() {
 			<Tab.Navigator 
 			screenOptions = {{
 				headerShown: false,
+				tabBarShowLabel: false,
 				tabBarActiveTintColor: '#0782F9',
                 tabBarInactiveTintColor: 'gray',
                 //Tab bar styles can be added here
                 tabBarStyle:{
-					paddingVertical: 5,
+					//paddingVertical: 5,
 					//borderTopLeftRadius:15,
 					borderRadius:15,
 					backgroundColor:'white',
@@ -71,8 +72,8 @@ export default function App() {
 						source = {require('./assets/icons/home_icon.png')}
 						resizeMode = "contain"
 						style={{
-							width: 30,
-							height: 30,
+							width: 35,
+							height: 35,
 							tintColor: focused ? "#0782F9" : "gray",
 						}}
 						/>
@@ -89,8 +90,8 @@ export default function App() {
 						source = {require('./assets/icons/speech_icon.png')}
 						resizeMode = "contain"
 						style={{
-							width: 30,
-							height: 30,
+							width: 35,
+							height: 35,
 							tintColor: focused ? "#0782F9" : "gray",
 						}}
 						/>
@@ -107,8 +108,8 @@ export default function App() {
 						source = {require('./assets/icons/stats_icon.png')}
 						resizeMode = "contain"
 						style={{
-							width: 30,
-							height: 30,
+							width: 35,
+							height: 35,
 							tintColor: focused ? "#0782F9" : "gray",
 						}}
 						/>
