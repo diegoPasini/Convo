@@ -8,7 +8,7 @@ import { useFonts } from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen';
 import { LoginPageStyleSheet } from "./LoginPageStyleSheet";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-
+import { getFirestore, collection, getDocs, setDoc, addDoc } from 'firebase/firestore';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -17,6 +17,20 @@ export default function LoginPage({navigation}) {
     const [password, setPassword] = useState('')
     
     const auth = getAuth()
+
+    const db = getFirestore()
+	const colRef = collection(db, "users")
+
+	// getDocs(colRef)
+	// 	.then((snapshot) => {
+	// 	let collection = []
+	// 	snapshot.docs.forEach((doc) => {
+	// 		collection.push({...doc.data(), id: doc.id })
+	// 	})
+	// 	console.log(collection)	
+	// })
+	
+	// console.log(collection)	
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
@@ -27,14 +41,22 @@ export default function LoginPage({navigation}) {
         return unsubscribe
     }, [])
 
-    const handleSignUp = () =>{
+    async function handleSignUp(){
         createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             // Signed in 
-            const user = userCredential.user;
-            console.log(user.email)
+            setUser(userCredential)
         })
         .catch(error => alert(error.message));
+        
+    }
+    async function setUser(userCredential){
+        const user = userCredential.user;
+        console.log(user.email);
+        await addDoc(colRef, {
+            name: "Diogenes",
+            email: user.email
+        });
     }
     
     const handleLogin = () => {
@@ -42,6 +64,7 @@ export default function LoginPage({navigation}) {
         .then(userCredentials => {
             const user = userCredentials.user
             console.log("Logged in with", user.email)
+
         })
         .catch(error => alert(error.message))
     }

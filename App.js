@@ -10,6 +10,8 @@ import HomePage from './HomePage'
 import LoginPage from './LoginPage';
 import './global.js'
 import { initializeApp } from 'firebase/app';
+import PracticePage from './PracticePage';
+
 
 const chatStack = createNativeStackNavigator();
 function ConvoScreen() {
@@ -24,7 +26,8 @@ function ConvoScreen() {
 
 const Tab = createBottomTabNavigator();
 export default function App() {
-	NavigationBar.setVisibilityAsync("hidden");
+	NavigationBar.setBackgroundColorAsync("white");
+	NavigationBar.setButtonStyleAsync("dark");
 	const firebaseConfig = {
         apiKey: "AIzaSyAQ-iN0n8U5LbFTX0orq_8W1l8co4WcrmE",
         authDomain: "convo-914a5.firebaseapp.com",
@@ -37,30 +40,33 @@ export default function App() {
       
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
+	
+	
 	return(
 		<NavigationContainer>
-			<Tab.Navigator 
+			<Tab.Navigator  
 			screenOptions = {{
 				headerShown: false,
 				tabBarShowLabel: false,
-				tabBarActiveTintColor: '#0782F9',
+				//tabBarActiveTintColor: '#0782F9',
                 tabBarInactiveTintColor: 'gray',
                 //Tab bar styles can be added here
                 tabBarStyle:{
 					//paddingVertical: 5,
-					//borderTopLeftRadius:15,
-					borderRadius:15,
+					borderTopLeftRadius:30,
+					borderTopRightRadius:30,
 					backgroundColor:'white',
 					//position:'absolute',
 					height:60, 
-					left: "5%",
+					//left: "5%",
 					//right: 15,
-					width: "90%",
-					bottom: "1%",
+					//width: "90%",
+					//bottom: "1%",
 					},
                 tabBarLabelStyle:{paddingBottom:3},
 				}
 			}
+			initialRouteName='PracticePage'
 			
 			>
 				<Tab.Screen name = "HomePage" 
@@ -81,8 +87,8 @@ export default function App() {
 					),
 				}}
 				/>
-				<Tab.Screen name = "ConvoPage" 
-				component = {ConvoScreen} 
+				<Tab.Screen name = "PracticePage" 
+				component = {PracticePage} 
 				options ={{
 					tabBarIcon:({focused}) => (
 					<View style={{alignItems:"center", justifyContent: "center", top: 3,}}>	
@@ -92,7 +98,7 @@ export default function App() {
 						style={{
 							width: 35,
 							height: 35,
-							tintColor: focused ? "#0782F9" : "gray",
+							tintColor: focused ? "#EE4266" : "gray",
 						}}
 						/>
 					</View>
@@ -110,7 +116,7 @@ export default function App() {
 						style={{
 							width: 35,
 							height: 35,
-							tintColor: focused ? "#0782F9" : "gray",
+							tintColor: focused ? "#0EAD69" : "gray",
 						}}
 						/>
 					</View>
