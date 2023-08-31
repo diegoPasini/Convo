@@ -44,86 +44,93 @@ export default function App() {
 	
 	return(
 		<NavigationContainer>
-			<Tab.Navigator  
-			screenOptions = {{
-				headerShown: false,
-				tabBarShowLabel: false,
-				//tabBarActiveTintColor: '#0782F9',
-                tabBarInactiveTintColor: 'gray',
-                //Tab bar styles can be added here
-                tabBarStyle:{
-					//paddingVertical: 5,
-					borderTopLeftRadius:30,
-					borderTopRightRadius:30,
-					backgroundColor:'white',
-					//position:'absolute',
-					height:60, 
-					//left: "5%",
-					//right: 15,
-					//width: "90%",
-					//bottom: "1%",
-					},
-                tabBarLabelStyle:{paddingBottom:3},
-				}
-			}
-			initialRouteName='PracticePage'
-			
-			>
-				<Tab.Screen name = "HomePage" 
-				component = {HomePage}
-				options ={{
-					tabBarIcon:({focused}) => (
-					<View style={{alignItems:"center", justifyContent: "center", top: 3,}}>	
-						<Image
-						source = {require('./assets/icons/home_icon.png')}
-						resizeMode = "contain"
-						style={{
-							width: 35,
-							height: 35,
-							tintColor: focused ? "#0782F9" : "gray",
-						}}
-						/>
-					</View>
-					),
-				}}
-				/>
-				<Tab.Screen name = "PracticePage" 
-				component = {PracticePage} 
-				options ={{
-					tabBarIcon:({focused}) => (
-					<View style={{alignItems:"center", justifyContent: "center", top: 3,}}>	
-						<Image
-						source = {require('./assets/icons/speech_icon.png')}
-						resizeMode = "contain"
-						style={{
-							width: 35,
-							height: 35,
-							tintColor: focused ? "#EE4266" : "gray",
-						}}
-						/>
-					</View>
-					),
-				}}
-				/>
-				<Tab.Screen name = "LoginPage" 
-				component = {LoginPage}
-				options ={{
-					tabBarIcon:({focused}) => (
-					<View style={{alignItems:"center", justifyContent: "center", top: 3,}}>	
-						<Image
-						source = {require('./assets/icons/stats_icon.png')}
-						resizeMode = "contain"
-						style={{
-							width: 35,
-							height: 35,
-							tintColor: focused ? "#0EAD69" : "gray",
-						}}
-						/>
-					</View>
-					),
-				}}
-				/>
-			</Tab.Navigator>
+		<chatStack.Navigator screenOptions = {{headerShown: false}}>
+			<chatStack.Screen name = "ConvoPage" component = {ConvoPage}/>
+			<chatStack.Screen name = "SettingsPage" component = {SettingsPage}/>
+		</chatStack.Navigator>
 		</NavigationContainer>
 	);
+
+	// <NavigationContainer>
+		// 	<Tab.Navigator  
+		// 	screenOptions = {{
+		// 		headerShown: false,
+		// 		tabBarShowLabel: false,
+		// 		//tabBarActiveTintColor: '#0782F9',
+        //         tabBarInactiveTintColor: 'gray',
+        //         //Tab bar styles can be added here
+        //         tabBarStyle:{
+		// 			//paddingVertical: 5,
+		// 			borderTopLeftRadius:30,
+		// 			borderTopRightRadius:30,
+		// 			backgroundColor:'white',
+		// 			//position:'absolute',
+		// 			height:60, 
+		// 			//left: "5%",
+		// 			//right: 15,
+		// 			//width: "90%",
+		// 			//bottom: "1%",
+		// 			},
+        //         tabBarLabelStyle:{paddingBottom:3},
+		// 		}
+		// 	}
+		// 	initialRouteName='PracticePage'
+			
+		// 	>
+		// 		<Tab.Screen name = "HomePage" 
+		// 		component = {HomePage}
+		// 		options ={{
+		// 			tabBarIcon:({focused}) => (
+		// 			<View style={{alignItems:"center", justifyContent: "center", top: 3,}}>	
+		// 				<Image
+		// 				source = {require('./assets/icons/home_icon.png')}
+		// 				resizeMode = "contain"
+		// 				style={{
+		// 					width: 35,
+		// 					height: 35,
+		// 					tintColor: focused ? "#0782F9" : "gray",
+		// 				}}
+		// 				/>
+		// 			</View>
+		// 			),
+		// 		}}
+		// 		/>
+		// 		<Tab.Screen name = "ConvoPage" 
+		// 		component = {ConvoPage} 
+		// 		options ={{
+		// 			tabBarIcon:({focused}) => (
+		// 			<View style={{alignItems:"center", justifyContent: "center", top: 3,}}>	
+		// 				<Image
+		// 				source = {require('./assets/icons/speech_icon.png')}
+		// 				resizeMode = "contain"
+		// 				style={{
+		// 					width: 35,
+		// 					height: 35,
+		// 					tintColor: focused ? "#EE4266" : "gray",
+		// 				}}
+		// 				/>
+		// 			</View>
+		// 			),
+		// 		}}
+		// 		/>
+		// 		<Tab.Screen name = "LoginPage" 
+		// 		component = {LoginPage}
+		// 		options ={{
+		// 			tabBarIcon:({focused}) => (
+		// 			<View style={{alignItems:"center", justifyContent: "center", top: 3,}}>	
+		// 				<Image
+		// 				source = {require('./assets/icons/stats_icon.png')}
+		// 				resizeMode = "contain"
+		// 				style={{
+		// 					width: 35,
+		// 					height: 35,
+		// 					tintColor: focused ? "#0EAD69" : "gray",
+		// 				}}
+		// 				/>
+		// 			</View>
+		// 			),
+		// 		}}
+		// 		/>
+		// 	</Tab.Navigator>
+		// </NavigationContainer>
 }
