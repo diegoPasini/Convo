@@ -1,5 +1,5 @@
 
-(![image](https://github.com/diegoPasini/ISP/assets/74738050/a2a514be-e426-42d4-ae19-25773c7296d9))
+![image](https://github.com/diegoPasini/ISP/assets/74738050/a2a514be-e426-42d4-ae19-25773c7296d9)
 
 
 # Convo
