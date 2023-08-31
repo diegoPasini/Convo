@@ -3,8 +3,8 @@
 
 # Convo
 
-An AI powered Language Tutor
-
+**An AI powered Language Tutor
+**
 ## What is Convo?
 
 Currently, online language learning apps are great for improving writing, listening, and reading skills. Learning fluent conversational speaking, alone, however, is extremely difficult. It requires knowing someone who is a fluent speaker and can correct your grammar or hiring a tutor which is expensive. 
