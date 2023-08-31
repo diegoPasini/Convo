@@ -1,5 +1,5 @@
 
-![Logo](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/th5xamgrr6se0x5ro4g6.png)
+(![image](https://github.com/diegoPasini/ISP/assets/74738050/a2a514be-e426-42d4-ae19-25773c7296d9))
 
 
 # Convo
